@@ -28,7 +28,7 @@ $foreground = 1 if (defined($ARGV[0]) && ($ARGV[0] eq '-f'));
 unless ($foreground) {
 
   # open log file
-  open(LOG,"> $config->{agent}->{log}")
+  open(LOG,">> $config->{agent}->{log}")
   or die "($$) [exilog_agent] Can't open log file $config->{agent}->{log}.\n";
 
   print LOG scalar localtime()." ($$) [exilog_agent] Starting.\n";
