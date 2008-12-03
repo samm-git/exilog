@@ -532,7 +532,7 @@ sub _print_Messages_selector {
       $q->table({-cellspacing=>0,-cellpadding=>4,-border=>0},
         $q->Tr(
           $q->td({-align=>"left",-style=>"width: 16px;"},
-            $q->img({-src=>"icons/event_type.png"})
+            $q->img({-src=>$config->{web}->{webroot}."icons/event_type.png"})
           ),
           $q->td({-align=>"left",-style=>"width: 100px;"},
             "Search Type"
@@ -574,7 +574,7 @@ sub _print_Messages_selector {
         $q->table({-cellspacing=>0,-cellpadding=>4,-border=>0},
           $q->Tr(
             $q->td({-align=>"left",-style=>"width: 16px;"},
-              $q->img({-src=>"icons/find.png"})
+              $q->img({-src=>$config->{web}->{webroot}."icons/find.png"})
             ),
             $q->td({-align=>"left",-style=>"width: 100px;"},
               "Search Term"
@@ -594,7 +594,7 @@ sub _print_Messages_selector {
        $q->table({-cellspacing=>0,-cellpadding=>4,-border=>0},
          $q->Tr(
            $q->td({-align=>"left",-valign=>"top",-style=>"width: 16px;"},
-             $q->img({-src=>"icons/address.png"})
+             $q->img({-src=>$config->{web}->{webroot}."icons/address.png"})
            ),
            $q->td({-align=>"left",-valign=>"top",-style=>"width: 100px;"},
              "Event types"
@@ -652,7 +652,7 @@ sub _print_Messages_selector {
         $q->table({-cellspacing=>0,-cellpadding=>4,-border=>0},
           $q->Tr(
             $q->td({-align=>"left",-valign=>"top",-style=>"width: 16px;"},
-              $q->img({-src=>"icons/server.png"})
+              $q->img({-src=>$config->{web}->{webroot}."icons/server.png"})
             ),
             $q->td({-align=>"left",-valign=>"top",-style=>"width: 100px;"},
               "Servers"
@@ -719,7 +719,7 @@ sub _print_Messages_selector {
        $q->table({-cellspacing=>0,-cellpadding=>4,-border=>0},
          $q->Tr(
            $q->td({-align=>"left",-style=>"width: 16px;"},
-             $q->img({-src=>"icons/timerange.png"})
+             $q->img({-src=>$config->{web}->{webroot}."icons/timerange.png"})
            ),
            $q->td({-align=>"left",-style=>"width: 100px;"},
              "Time Range"

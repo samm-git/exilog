@@ -59,7 +59,7 @@ sub render_server {
           $q->table({-cellpadding=>0, -cellspacing=>0, -border=>0},
             $q->Tr(
               $q->td({-class=>"large_icon"},
-                $q->img({-src=>"icons/server_normal.png",-border=>0})
+                $q->img({-src=>$config->{web}->{webroot}."icons/server_normal.png",-border=>0})
               ),
               $q->td({-class=>"large_text"},
                 $server
@@ -71,13 +71,13 @@ sub render_server {
           $q->table({-cellpadding=>0, -cellspacing=>0, -border=>0, -width=>"1%"},
             $q->Tr(
               $q->td({-rowspan=>2,-class=>"large_icon"},
-                $q->img({-src=>"icons/queue_normal.png",-border=>0,-title=>"Queue Status"})
+                $q->img({-src=>$config->{web}->{webroot}."icons/queue_normal.png",-border=>0,-title=>"Queue Status"})
               ),
               $q->td({-rowspan=>2,-class=>"large_icon"},
                 "<b>Queue Status</b>"
               ),
               $q->td({-class=>"stats"},
-                _item( { 'icon' => "icons/queued.png" },
+                _item( { 'icon' => $config->{web}->{webroot}."icons/queued.png" },
                        { 
                          #'link' => { 'tab' => 'queues' },
                          'text' => ($num_queued->{deferred}+$num_queued->{frozen})." queued (".($num_queued->{deferred_bounce}+$num_queued->{frozen_bounce})." bounces)" } )
@@ -85,7 +85,7 @@ sub render_server {
               ),
               $q->td({-class=>"stats"},
                 ( $num_queued->{deferred} ?
-                   _item( { 'icon' => "icons/deferred.png" },
+                   _item( { 'icon' => $config->{web}->{webroot}."icons/deferred.png" },
                           { 'text' => $num_queued->{deferred}." deferred (".$num_queued->{deferred_bounce}." bounces)" } )
                 :
                   "&nbsp;"
@@ -95,7 +95,7 @@ sub render_server {
             $q->Tr(
               $q->td({-class=>"stats"},
                 ( $num_queued->{frozen} ?
-                   _item( { 'icon' => "icons/frozen.png" },
+                   _item( { 'icon' => $config->{web}->{webroot}."icons/frozen.png" },
                           { 'text' => $num_queued->{frozen}." frozen (".$num_queued->{frozen_bounce}." bounces)" } )
                 :
                   "&nbsp;"
@@ -110,27 +110,27 @@ sub render_server {
           $q->table({-cellpadding=>0, -cellspacing=>0, -border=>0, -width=>"1%"},
             $q->Tr(
               $q->td({-rowspan=>2,-class=>"large_icon"},
-                $q->img({-src=>"icons/stats_h24.png",-border=>0,-title=>"Usage Statistics"})
+                $q->img({-src=>$config->{web}->{webroot}."icons/stats_h24.png",-border=>0,-title=>"Usage Statistics"})
               ),
               $q->td({-rowspan=>2,-class=>"large_icon"},
                 "<b>Last 24h stats</b>"
               ),
               $q->td({-class=>"stats"},
-                _item( { 'icon' => "icons/arrival.png", 'title' => "Arrivals" },
+                _item( { 'icon' => $config->{web}->{webroot}."icons/arrival.png", 'title' => "Arrivals" },
                        { 'text' => $h24_stats->{arrivals}." arrivals" } )
               ),
               $q->td({-class=>"stats"},
-                _item( { 'icon' => "icons/size.png", 'title' => "Average message size" },
+                _item( { 'icon' => $config->{web}->{webroot}."icons/size.png", 'title' => "Average message size" },
                        { 'text' => "Average message size: ".human_size($h24_stats->{avg_msg_size}) } )
               )
             ),
             $q->Tr(
               $q->td({-class=>"stats"},
-                  _item( { 'icon' => "icons/delivery.png" },
+                  _item( { 'icon' => $config->{web}->{webroot}."icons/delivery.png" },
                          { 'text' => $h24_stats->{deliveries}." deliveries" } )
               ),
               $q->td({-class=>"stats"},
-                  _item( { 'icon' => "icons/error.png" },
+                  _item( { 'icon' => $config->{web}->{webroot}."icons/error.png" },
                          { 'text' => $h24_stats->{errors}." errors" } )
               )
             )
@@ -290,12 +290,12 @@ sub _titlebar_html {
           ),
           (exists($h->{size}) ?
           $q->td({-class=>"message"},
-            _item( { 'icon' => "icons/size.png" },
+            _item( { 'icon' => $config->{web}->{webroot}."icons/size.png" },
                    { 'text' => human_size($h->{size})} )
           ) : ""),
           (exists($h->{completed}) ?
           $q->td({-class=>"message"},
-            _item( { 'icon' => "icons/stopwatch.png"},
+            _item( { 'icon' => $config->{web}->{webroot}."icons/stopwatch.png"},
                    { 'text' => _timespan((defined($h->{completed}) ? $h->{completed} : time()) - $h->{timestamp} ) } )
           ) : "")
         )
@@ -315,23 +315,23 @@ sub _message_html {
           $q->td({-rowspan=>2,-valign=>"top",-align=>"center",-class=>"large_icon"},
             ( ($h->{proto} =~ /local/i) ?
                 # local
-                $q->img({-src=>"icons/arrival_local.png",-border=>0,-title=>uc($h->{proto})." | ".$h->{user}})
+                $q->img({-src=>$config->{web}->{webroot}."icons/arrival_local.png",-border=>0,-title=>uc($h->{proto})." | ".$h->{user}})
               :
                 ( ( ($h->{proto} eq "asmtp") || ($h->{proto} =~ /a$/) ) ?
                   ( defined($h->{tls_cipher}) ?
                     # Auth w/ TLS
-                    $q->img({-src=>"icons/arrival_tls_auth.png",-border=>0,-title=>uc($h->{proto})." | ".$h->{user}." | ".$h->{tls_cipher}})
+                    $q->img({-src=>$config->{web}->{webroot}."icons/arrival_tls_auth.png",-border=>0,-title=>uc($h->{proto})." | ".$h->{user}." | ".$h->{tls_cipher}})
                   :
                     # Auth w/o TLS
-                    $q->img({-src=>"icons/arrival_auth.png",-border=>0,-title=>uc($h->{proto})." | ".$h->{user}})
+                    $q->img({-src=>$config->{web}->{webroot}."icons/arrival_auth.png",-border=>0,-title=>uc($h->{proto})." | ".$h->{user}})
                   )
                 :
                   ( defined($h->{tls_cipher}) ?
                     # TLS
-                    $q->img({-src=>"icons/arrival_tls.png",-border=>0,-title=>uc($h->{proto})." | ".$h->{tls_cipher}})
+                    $q->img({-src=>$config->{web}->{webroot}."icons/arrival_tls.png",-border=>0,-title=>uc($h->{proto})." | ".$h->{tls_cipher}})
                   :
                     # nothing special
-                    $q->img({-src=>"icons/arrival_normal.png",-border=>0,-title=>uc($h->{proto})})
+                    $q->img({-src=>$config->{web}->{webroot}."icons/arrival_normal.png",-border=>0,-title=>uc($h->{proto})})
                   )
                 )
             )
@@ -366,14 +366,14 @@ sub _message_html {
           $q->td(
             _item( { 'style' => (($h->{timestamp} == $h->{sort_timestamp}) ? "text-decoration: underline;" : undef) , 'text' => stamp_to_date($h->{timestamp}) },
                    (defined($h->{host_addr}) ? (
-                    { 'icon' => "icons/server.png" },
+                    { 'icon' => $config->{web}->{webroot}."icons/server.png" },
                     { 'link' => { 'tab' => 'messages',
                                   'tr' => '0',
                                   'qt' => 'host-all',
                                   'qs' => $h->{host_addr} },
                       'text' => $h->{host_addr} },
                     (edt($h,'host_rdns') ?
-                      ( { 'icon' => "icons/dns.png" },
+                      ( { 'icon' => $config->{web}->{webroot}."icons/dns.png" },
                         { 'link' => { 'tab' => 'messages',
                                       'tr' => '0',
                                       'qt' => 'host-all',
@@ -383,7 +383,7 @@ sub _message_html {
                       ()
                     ),
                     (edt($h,'host_helo') ?
-                      ( { 'icon' => "icons/helo.png" },
+                      ( { 'icon' => $config->{web}->{webroot}."icons/helo.png" },
                         { 'link' => { 'tab' => 'messages',
                                       'tr' => '0',
                                       'qt' => 'host-all',
@@ -393,7 +393,7 @@ sub _message_html {
                       ()
                     ),
                     (defined($h->{host_ident}) ? (
-                     { 'icon' => "icons/ident.png" },
+                     { 'icon' => $config->{web}->{webroot}."icons/ident.png" },
                      { 'link' => { 'tab' => 'messages',
                                    'tr' => '0',
                                    'qt' => 'ident',
@@ -420,10 +420,10 @@ sub _deferral_html {
           $q->td({-rowspan=>3,-valign=>"top",-align=>"center",-class=>"large_icon"},
             ( defined($deferral->{tls_cipher}) ?
               # w/ TLS
-              $q->img({-src=>"icons/deferral_tls.png",-border=>0,-title=>$deferral->{tls_cipher}})
+              $q->img({-src=>$config->{web}->{webroot}."icons/deferral_tls.png",-border=>0,-title=>$deferral->{tls_cipher}})
             :
               # w/o TLS
-              $q->img({-src=>"icons/deferral_normal.png",-border=>0})
+              $q->img({-src=>$config->{web}->{webroot}."icons/deferral_normal.png",-border=>0})
             )
           ),
           $q->td(
@@ -453,20 +453,20 @@ sub _deferral_html {
         $q->Tr(
           $q->td(
             _item( { 'style' => (($deferral->{timestamp} == $sort_timestamp) ? "text-decoration: underline;" : undef) , 'text' => stamp_to_date($deferral->{timestamp}) },
-                   { 'icon' => "icons/router_transport.png" },
+                   { 'icon' => $config->{web}->{webroot}."icons/router_transport.png" },
                    { 'text' => $deferral->{router}.
                    ( defined($deferral->{transport}) ?
                      "->".$deferral->{transport}.(defined($deferral->{shadow_transport}) ? " [".$deferral->{shadow_transport}."]" : "")
                    :
                      "") },
                    ( defined($deferral->{host_addr}) ?
-                    ( { 'icon' => "icons/server.png" },
+                    ( { 'icon' => $config->{web}->{webroot}."icons/server.png" },
                       { 'link' => { 'tab' => 'messages',
                                     'tr' => '0',
                                     'qt' => 'host-all',
                                     'qs' => $deferral->{host_addr} },
                         'text' => $deferral->{host_addr} },
-                      { 'icon' => "icons/dns.png" },
+                      { 'icon' => $config->{web}->{webroot}."icons/dns.png" },
                       { 'link' => { 'tab' => 'messages',
                                     'tr' => '0',
                                     'qt' => 'host-all',
@@ -479,7 +479,7 @@ sub _deferral_html {
         ),
         $q->Tr(
           $q->td(
-            _item( { 'icon' => "icons/errmsg.png" },
+            _item( { 'icon' => $config->{web}->{webroot}."icons/errmsg.png" },
                    { 'text' => $deferral->{errmsg} } )
           )
         )
@@ -499,10 +499,10 @@ sub _reject_html {
           $q->td({-rowspan=>2,-valign=>"top",-align=>"center",-class=>"large_icon"},
             (edv($reject,'message_id') ?
               # post-DATA
-              $q->img({-src=>"icons/reject_postdata.png",-border=>0})
+              $q->img({-src=>$config->{web}->{webroot}."icons/reject_postdata.png",-border=>0})
             :
               # pre-DATA
-              $q->img({-src=>"icons/reject_predata.png",-border=>0})
+              $q->img({-src=>$config->{web}->{webroot}."icons/reject_predata.png",-border=>0})
             )
           ),
           $q->td(
@@ -520,14 +520,14 @@ sub _reject_html {
                      )
                    :
                      () ),
-                   { 'icon' => "icons/server.png" },
+                   { 'icon' => $config->{web}->{webroot}."icons/server.png" },
                    { 'link' => { 'tab' => 'messages',
                                  'tr' => '0',
                                  'qt' => 'host-all',
                                  'qs' => $reject->{host_addr} },
                      'text' => $reject->{host_addr} },
                    (edt($reject,'host_rdns') ?
-                      ( { 'icon' => "icons/dns.png" },
+                      ( { 'icon' => $config->{web}->{webroot}."icons/dns.png" },
                         { 'link' => { 'tab' => 'messages',
                                       'tr' => '0',
                                       'qt' => 'host-all',
@@ -537,7 +537,7 @@ sub _reject_html {
                       ()
                     ),
                     (edt($reject,'host_helo') ?
-                      ( { 'icon' => "icons/helo.png" },
+                      ( { 'icon' => $config->{web}->{webroot}."icons/helo.png" },
                         { 'link' => { 'tab' => 'messages',
                                     'tr' => '0',
                                     'qt' => 'host-all',
@@ -547,7 +547,7 @@ sub _reject_html {
                       ()
                     ),
                    (defined($reject->{host_ident}) ?
-                    ( { 'icon' => "icons/ident.png" },
+                    ( { 'icon' => $config->{web}->{webroot}."icons/ident.png" },
                       { 'link' => { 'tab' => 'messages',
                                     'tr' => '0',
                                     'qt' => 'ident',
@@ -559,7 +559,7 @@ sub _reject_html {
         $q->Tr(
           $q->td(
             _item( { 'style' => (($reject->{timestamp} == $sort_timestamp) ? "text-decoration: underline;" : undef) , 'text' => stamp_to_date($reject->{timestamp}) },
-                   { 'icon' => "icons/errmsg.png" },
+                   { 'icon' => $config->{web}->{webroot}."icons/errmsg.png" },
                    { 'text' => $reject->{errmsg} } )
           )
         )
@@ -579,10 +579,10 @@ sub _error_html {
           $q->td({-rowspan=>3,-valign=>"top",-align=>"center",-class=>"large_icon"},
             ( defined($error->{tls_cipher}) ?
               # w/ TLS
-              $q->img({-src=>"icons/error_tls.png",-border=>0,-title=>$error->{tls_cipher}})
+              $q->img({-src=>$config->{web}->{webroot}."icons/error_tls.png",-border=>0,-title=>$error->{tls_cipher}})
             :
               # w/o TLS
-              $q->img({-src=>"icons/error_normal.png",-border=>0})
+              $q->img({-src=>$config->{web}->{webroot}."icons/error_normal.png",-border=>0})
             )
           ),
           $q->td(
@@ -613,20 +613,20 @@ sub _error_html {
           $q->td(
             _item( { 'style' => (($error->{timestamp} == $sort_timestamp) ? "text-decoration: underline;" : undef) , 'text' => stamp_to_date($error->{timestamp}) },
                    ( edv($error,'router') ? (
-                   { 'icon' => "icons/router_transport.png" },
+                   { 'icon' => $config->{web}->{webroot}."icons/router_transport.png" },
                    { 'text' => $error->{router}.
                    ( defined($error->{transport}) ?
                      "->".$error->{transport}.(defined($error->{shadow_transport}) ? " [".$error->{shadow_transport}."]" : "")
                    :
                      "") },
                    ( defined($error->{host_addr}) ?
-                    ( { 'icon' => "icons/server.png" },
+                    ( { 'icon' => $config->{web}->{webroot}."icons/server.png" },
                       { 'link' => { 'tab' => 'messages',
                                     'tr' => '0',
                                     'qt' => 'host-all',
                                     'qs' => $error->{host_addr} },
                         'text' => $error->{host_addr} },
-                      { 'icon' => "icons/dns.png" },
+                      { 'icon' => $config->{web}->{webroot}."icons/dns.png" },
                       { 'link' => { 'tab' => 'messages',
                                     'tr' => '0',
                                     'qt' => 'host-all',
@@ -639,7 +639,7 @@ sub _error_html {
         ),
         $q->Tr(
           $q->td(
-            _item( { 'icon' => "icons/errmsg.png" },
+            _item( { 'icon' => $config->{web}->{webroot}."icons/errmsg.png" },
                    { 'text' => $error->{errmsg} } )
           )
         )
@@ -659,10 +659,10 @@ sub _delivery_html {
           $q->td({-rowspan=>2,-valign=>"top",-align=>"center",-class=>"large_icon"},
             ( defined($delivery->{tls_cipher}) ?
               # w/ TLS
-              $q->img({-src=>"icons/delivery_tls.png",-border=>0,-title=>$delivery->{tls_cipher}})
+              $q->img({-src=>$config->{web}->{webroot}."icons/delivery_tls.png",-border=>0,-title=>$delivery->{tls_cipher}})
             :
               # w/o TLS
-             $q->img({-src=>"icons/delivery_normal.png",-border=>0})
+             $q->img({-src=>$config->{web}->{webroot}."icons/delivery_normal.png",-border=>0})
             )
           ),
           $q->td(
@@ -692,20 +692,20 @@ sub _delivery_html {
         $q->Tr(
           $q->td(
             _item( { 'style' => (($delivery->{timestamp} == $sort_timestamp) ? "text-decoration: underline;" : undef) , 'text' => stamp_to_date($delivery->{timestamp}) },
-                   { 'icon' => "icons/router_transport.png" },
+                   { 'icon' => $config->{web}->{webroot}."icons/router_transport.png" },
                    { 'text' => $delivery->{router}.
                    ( defined($delivery->{transport}) ?
                      "->".$delivery->{transport}.(defined($delivery->{shadow_transport}) ? " [".$delivery->{shadow_transport}."]" : "")
                    :
                      "") },
                    ( defined($delivery->{host_addr}) ?
-                    ( { 'icon' => "icons/server.png" },
+                    ( { 'icon' => $config->{web}->{webroot}."icons/server.png" },
                       { 'link' => { 'tab' => 'messages',
                                     'tr' => '0',
                                     'qt' => 'host-all',
                                     'qs' => $delivery->{host_addr} },
                         'text' => $delivery->{host_addr} },
-                      { 'icon' => "icons/dns.png" },
+                      { 'icon' => $config->{web}->{webroot}."icons/dns.png" },
                       { 'link' => { 'tab' => 'messages',
                                     'tr' => '0',
                                     'qt' => 'host-all',
@@ -730,7 +730,7 @@ sub _unknown_html {
       $q->table({-cellpadding=>0,-cellspacing=>0, -border=>0},
         $q->Tr(
           $q->td({-valign=>"top",-align=>"center",-class=>"large_icon"},
-            $q->img({-src=>"icons/unknown.png",-border=>0})
+            $q->img({-src=>$config->{web}->{webroot}."icons/unknown.png",-border=>0})
           ),
           $q->td(
             _item( { 'style' => (($unknown->{timestamp} == $sort_timestamp) ? "text-decoration: underline;" : undef) , 'text' => stamp_to_date($unknown->{timestamp}) },
@@ -756,10 +756,10 @@ sub _queue_html {
           $q->td({-rowspan=>2,-valign=>"top",-align=>"center",-class=>"large_icon"},
             ( edt($queue,'frozen') ?
               # frozen
-              $q->img({-src=>"icons/queue_frozen.png",-border=>0,-title=>"Frozen at ".stamp_to_date($queue->{frozen})})
+              $q->img({-src=>$config->{web}->{webroot}."icons/queue_frozen.png",-border=>0,-title=>"Frozen at ".stamp_to_date($queue->{frozen})})
             :
               # normal
-              $q->img({-src=>"icons/queue_deferred.png",-border=>0})
+              $q->img({-src=>$config->{web}->{webroot}."icons/queue_deferred.png",-border=>0})
             )
           ),
           $q->td(
@@ -769,7 +769,7 @@ sub _queue_html {
         ),
         $q->Tr(
           $q->td(
-            _item( { 'icon' => "icons/delivered.png",
+            _item( { 'icon' => $config->{web}->{webroot}."icons/delivered.png",
                      ( (scalar @recipients_delivered) ?
                        ( 'title' => join("\n",@recipients_delivered) )
                      :
@@ -777,11 +777,11 @@ sub _queue_html {
                      ) },
                    { 'text' => scalar @recipients_delivered },
                    { 'text' => '&nbsp;' },
-                   { 'icon' => "icons/deferred.png",
+                   { 'icon' => $config->{web}->{webroot}."icons/deferred.png",
                      'title' => join("\n",@recipients_pending) },
                    { 'text' => scalar @recipients_pending },
                    { 'text' => '&nbsp;' },
-                   { 'icon' => "icons/dsn_warning.png",
+                   { 'icon' => $config->{web}->{webroot}."icons/dsn_warning.png",
                      'title' => "Number of DSNs sent" },
                    { 'text' => $queue->{num_dsn} } )
           )

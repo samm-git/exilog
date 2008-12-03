@@ -75,10 +75,10 @@ sub _print_cgi_headers {
 
 sub _print_html_header {
   print $q->start_html({-title=>"Exilog ".$version,
-                        -style=>{-src=>"exilog_stylesheet.css"},
+                        -style=>{-src=>$config->{web}->{webroot}."exilog_stylesheet.css"},
                         -script=>[
                                    {-language=>'JAVASCRIPT',
-                                    -src=>"exilog_jscript.js"},
+                                    -src=>$config->{web}->{webroot}."exilog_jscript.js"},
                                    "document.write(getCalendarStyles());"
                                  ],
                         -meta=>{'http-equiv' => 'pragma', 'content' => 'no-cache'}});

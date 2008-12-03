@@ -135,7 +135,10 @@
        'bob',
        'alice',
        'peter'
-     ]
+     ],
+
+     # url path to stylesheet, javascript, icons, ...
+     'webroot' => '/exilog',
 
    } # End of web interface configuration ---------------
 };

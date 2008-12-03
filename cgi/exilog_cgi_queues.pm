@@ -52,7 +52,7 @@ sub _print_Queue_selector {
       $q->table({-cellspacing=>0,-cellpadding=>4,-border=>0},
         $q->Tr(
           $q->td({-align=>"left",-valign=>"top",-style=>"width: 16px;"},
-            $q->img({-src=>"icons/server.png"})
+            $q->img({-src=>$config->{web}->{webroot}."icons/server.png"})
           ),
           $q->td({-align=>"left",-valign=>"top",-style=>"width: 100px;"},
             "Servers"
