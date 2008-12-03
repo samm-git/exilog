@@ -120,6 +120,8 @@ sub _queue_actions {
   for (;;) {
     # conditional reconnect
     reconnect(1);
+
+    sql_update_heartbeat;
     
     my $deliver = sql_select('queue',
                              [ 'message_id' ],

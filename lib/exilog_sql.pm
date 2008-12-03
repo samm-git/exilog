@@ -30,6 +30,7 @@ BEGIN {
                       &sql_delete
                       &sql_optimize
                       &sql_count
+                      &sql_update_heartbeat
                       &sql_queue_add
                       &sql_queue_update
                       &sql_queue_delete
@@ -94,6 +95,11 @@ sub sql_optimize {
   return &{ "_".$config->{sql}->{type}."_sql_optimize" }(@_);
 };
 
+sub sql_update_heartbeat {
+  no strict "refs";
+  return &{ "_".$config->{sql}->{type}."_sql_update_heartbeat" }(@_);
+};
+
 sub sql_queue_add {
   no strict "refs";
   return &{ "_".$config->{sql}->{type}."_sql_queue_add" }(@_);
@@ -141,6 +147,12 @@ sub _pgsql_sql_count {
   $sh->execute;
   my $tmp = $sh->fetchrow_arrayref();
   return @{$tmp}[0];
+};
+
+sub _pgsql_sql_update_heartbeat {
+  my $now = time();
+
+  $dbh->do("REPLACE heartbeats SET server='". $config->{agent}->{server} ."', timestamp='". $now ."'");
 };
 
 sub _pgsql_sql_queue_delete {
@@ -322,6 +334,12 @@ sub _mysql_sql_count {
   $sh->execute;
   my $tmp = $sh->fetchrow_arrayref();
   return @{$tmp}[0];
+};
+
+sub _mysql_sql_update_heartbeat {
+  my $now = time();
+
+  $dbh->do("REPLACE heartbeats SET server='". $config->{agent}->{server} ."', timestamp='". $now ."'");
 };
 
 sub _mysql_sql_queue_delete {

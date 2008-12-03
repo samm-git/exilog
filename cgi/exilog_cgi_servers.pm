@@ -90,12 +90,36 @@ sub _get_h24_stats {
   return $h;
 }
 
+sub _get_last_update {
+  my $server = shift;
+  my $now = time();
+  my $timestamp;
+
+  my $results = sql_select( 'heartbeats', [ 'timestamp' ], { 'server' => $server } );
+
+  foreach (@{ $results }) {
+
+    $timestamp = $_->{timestamp};
+
+    # if timestamp is older then 5 minutes
+    if($timestamp + 300 < $now) {
+      return "<div style='color: #ff5555;'>". stamp_to_date($timestamp) ."</div>";
+    }
+
+    return "<div>". stamp_to_date($timestamp) ."</div>";
+
+  }
+
+  return "<div style='color: #ff0000;'>no heartbeat signal</div>";
+
+}
+
 sub servers {
 
   #print $q->div({-style=>"font-size: 28px; font-weight: bold;"},"Basic statictics for all servers");
 
   foreach my $server (sort {$a cmp $b} keys %{ $config->{servers} }) {
-    print render_server($server,_get_num_queued($server),_get_h24_stats($server));
+    print render_server($server,_get_num_queued($server),_get_h24_stats($server),_get_last_update($server));
   };
 }
 

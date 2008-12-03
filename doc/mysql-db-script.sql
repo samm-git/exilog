@@ -197,3 +197,12 @@ CREATE TABLE `unknown` (
   KEY `timestamp` (`timestamp`)
 ) TYPE=MyISAM;
 
+--
+-- Table structure for table `heartbeats`
+--
+
+CREATE TABLE IF NOT EXISTS `heartbeats` (
+  `server` varchar(32) NOT NULL,
+  `timestamp` bigint(20) default NULL,
+  PRIMARY KEY  (`server`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

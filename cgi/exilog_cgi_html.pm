@@ -51,6 +51,7 @@ sub render_server {
   my $server = shift;
   my $num_queued = shift;
   my $h24_stats = shift;
+  my $last_update = shift;
 
   $q->div({-class=>"top_spacer"},
     $q->table({-class=>"stats", -cellspacing=>1, -cellpadding=>2, -border=>0},
@@ -64,6 +65,10 @@ sub render_server {
               $q->td({-class=>"large_text"},
                 $server
               )
+            ),
+            $q->Tr(
+               $q->td('', ''),
+               $q->td('', 'last update: '. $last_update),
             )
           )
         ),
