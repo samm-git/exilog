@@ -40,7 +40,7 @@ sub _parse_error {
   $subj = _parse_delivery($subj,$h);
 
   m/()()/;
-  if ($subj =~ / host ([^ ]+?) \[([0-9.]+?)\]\:/) {
+  if ($subj =~ / host ([^ ]+?) \[([0-9A-Fa-f:.]+?)\]\:/) {
     $h->{host_addr} = $2;
     $h->{host_dns} = $1;
   };
@@ -58,7 +58,7 @@ sub _parse_deferral {
 
   $subj = _parse_delivery($subj,$h);
 
-  if ($subj =~ / host ([^ ]+?) \[([0-9.]+?)\]\:/) {
+  if ($subj =~ / host ([^ ]+?) \[([0-9A-Fa-f:.]+?)\]\:/) {
     $h->{host_addr} = $2;
     $h->{host_dns} = $1;
   };
@@ -138,7 +138,7 @@ sub _parse_arrival {
   if ($1) {
     my $hstr = $1;
     m/()/;
-    $hstr =~ s/\[([0-9.]+)\]$//;
+    $hstr =~ s/\[([0-9A-Fa-f:.]+)\]$//;
     $h->{host_addr} = $1 if ($1);
 
     $hstr =~ s/^ +//;
