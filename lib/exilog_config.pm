@@ -12,9 +12,7 @@
 package exilog_config;
 use strict;
 
-use FindBin;
-use FindBin qw($RealBin);
-use lib "$RealBin/";
+use lib "/usr/lib/exilog/";
 
 
 BEGIN {

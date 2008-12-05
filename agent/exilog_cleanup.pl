@@ -11,9 +11,7 @@
 
 use strict;
 
-use FindBin;
-use FindBin qw($RealBin);
-use lib "$RealBin/";
+use lib "/usr/lib/exilog/";
 
 use exilog_config;
 use exilog_sql;
