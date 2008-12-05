@@ -40,7 +40,7 @@ BEGIN {
 
 $version = "0.5";
 
-$config = _read_ph("$RealBin/exilog.conf");
+$config = _read_ph("/etc/exilog/exilog.conf");
 
 unless ($config) {
   print STDERR "($$) [exilog_config] Can't parse configuration file.\n";
