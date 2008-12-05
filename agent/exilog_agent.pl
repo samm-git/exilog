@@ -38,7 +38,6 @@ unless ($foreground) {
   if (defined($rc)) {
     # parent returns
     if ($rc) {
-      print "($$) [exilog_agent] Detaching from terminal, output goes to $config->{agent}->{log}.\n";
       exit(0);
     };
   }
