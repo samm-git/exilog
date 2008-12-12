@@ -30,7 +30,6 @@ BEGIN {
                       &render_server
                       &render_queue_table
                       $q
-
                    );
 
   %EXPORT_TAGS = ();
@@ -276,16 +275,20 @@ sub _titlebar_html {
                    ( (edv($h,'queue') &&
                      defined(@{$h->{queue}}[0])) ? { 'text' => '&middot;' } : undef ),
                    ( (edv($h,'queue') &&
-                     defined(@{$h->{queue}}[0])) ? { 'html' => $q->popup_menu({
-                                                               -name => 'ac_'.$h->{server}.'_'.$h->{'message_id'},
-                                                               -values => $actions,
-                                                               -default => 0,
-                                                               -labels => { 0 => ':: Please select action ::',
-                                                                            'deliver' => 'Force delivery',
-                                                                            'cancel' => 'Cancel (bounce)',
-                                                                            'delete' => 'Delete' },
-                                                               -override => 1
-                                                               }).$q->submit({-name=>'Go'})
+                     defined(@{$h->{queue}}[0])) ? { 'html' =>
+
+                        $q->div({ -id=>'ac_'.$h->{server}.'_'.$h->{'message_id'}.'_div',
+                                  -style=>"margin:0; padding:0; border:0; width: 110px; color: red;" },
+                          $q->popup_menu({ -values => $actions,
+                                           -default => 0,
+                                           -onChange=>"javascript:message_action('$h->{server}','$h->{message_id}',this,'ac_$h->{server}_$h->{message_id}_div');",
+                                           -labels => { 0 => ':: Select action ::',
+                                                              'deliver' => 'Force delivery',
+                                                              'cancel' => 'Cancel (bounce)',
+                                                              'delete' => 'Delete' },
+                                           -override => 1 } )
+                        )
+
                                                    } : undef ) )
           ),
           (exists($h->{size}) ?
@@ -797,64 +800,126 @@ sub render_queue_table {
 
   my $rows = "";
   foreach my $message (@{ $messages }) {
+
+    my $actions = [ 0, 'deliver' ];
+    unless (ina($config->{web}->{restricted_users}, $main::user)) {
+      if ($message->{mailfrom} ne '<>') {
+        push @{$actions}, 'cancel';
+      }
+      push @{$actions}, 'delete';
+    }
+
     my $row_id = $message->{server}.'_'.$message->{message_id};
     my @rcpts_delivered = split / /,$message->{recipients_delivered};
     my @rcpts_pending = split / /,$message->{recipients_pending};
+    my $rcpts_html = "";
+    foreach my $rcpt (@rcpts_pending) {
+      $rcpts_html .=
+        _item( { 'icon' => 'icons/deferred.png' },
+               { 'text' => $rcpt } );
+    }
+    foreach my $rcpt (@rcpts_delivered) {
+      $rcpts_html .=
+        _item( { 'icon' => 'icons/delivered.png' },
+               { 'text' => $rcpt } );
+    }
+    my $headers = $message->{headers};
+    $headers =~ s/\&/&amp;/g;
+    $headers =~ s/\</&lt;/g;
+    $headers =~ s/\>/&gt;/g;
+
     $rows .=
       $q->Tr(
-        $q->td({-class=>"queue"},
-          # Actions
-        ),
-        $q->td({-class=>"queue"},
-          $message->{server}
-        ),
-        $q->td({-class=>"queue"},
-          edt($message,'timestamp') ?
-            _timespan($now - $message->{timestamp})
-          :
-            '?'
-        ),
-        $q->td({-class=>"queue"},
-          _shorten_addr($message->{mailfrom},40)
-        ),
-        $q->td({-class=>"queue",
-                -onMouseOver=>"javascript:document.getElementById('$row_id' + '_pending').style.visibility = 'visible';",
-                -onMouseOut=>"javascript:document.getElementById('$row_id' + '_pending').style.visibility = 'hidden';"},
-          _shorten_addr($rcpts_pending[0],40)
-        ),
-        $q->td({-class=>"queue"},
-          (defined($rcpts_pending[0]) ?
-            $q->div({-id=>$row_id.'_pending', -class=>"rcpts_pending_popup"},"Test<br>Test2<br>Test3")
-          :
-            '').
-          _shorten_string($message->{subject},60)
+        $q->td(
+          $q->table({-class=>"queue_entry_table",-cellpadding=>2,-cellspacing=>1,-border=>0},
+            $q->Tr(
+              $q->td({ -class=>"queue",
+                       -width=>32,
+                       -rowspan=>2},
+                ( edt($message,'frozen') ?
+                     png("icons/queue_frozen.png",32,32,"Frozen at ".stamp_to_date($message->{frozen}))
+                   :
+                     png("icons/queue_deferred.png",32,32,"")
+                )
+              ),
+              $q->td({-class=>"queue"},
+                _item( { 'icon' => "icons/server.png" },
+                       { 'text' => $message->{server} } )
+              ),
+              $q->td({-class=>"queue", -align=>"center"},
+                _item( { 'icon' => "icons/timerange.png" },
+                       { 'text' => (edt($message,'timestamp') ?
+                                    _timespan($now - $message->{timestamp},2)
+                                    :
+                                    '?' ) } )
+              ),
+              $q->td({ -class=>"queue",
+                       -width=>"300" },
+                _item( { 'icon' => "icons/arrival.png" },
+                       { 'text' => _shorten_addr($message->{mailfrom},40) } )
+              ),
+              $q->td({-class=>"queue",
+                      -onMouseOver=>"javascript:document.getElementById('$row_id' + '_rcpts').style.visibility = 'visible';",
+                      -onMouseOut=>"javascript:document.getElementById('$row_id' + '_rcpts').style.visibility = 'hidden';" },
+                $q->div({-class=>"popup_container"},
+                  $q->div({-id=>$row_id.'_rcpts',
+                           -class=>"popup",
+                           -style=>"width:326px;"},
+                     $rcpts_html
+                  )
+                ).
+                _item( { 'icon' => "icons/deferred.png" }, 
+                       { 'html' => _shorten_addr($rcpts_pending[0],40).
+                                    ( ((scalar @rcpts_pending) + (scalar @rcpts_delivered) > 1) ?
+                                    ' (+'.((scalar @rcpts_pending)+(scalar @rcpts_delivered)-1).'&darr;)' : "" ) } )
+              )
+            ),
+            $q->Tr(
+              $q->td({ -class=>"queue",
+                       -width=>120,
+                       -nowrap=>"nowrap",
+                       -align=>"center"},
+                $message->{message_id}
+              ),
+              $q->td({ -class=>"queue",
+                       -style=>"padding: 0px;",
+                       -width=>110,
+                       -align=>"center"},
+                $q->div({ -id=>'ac_'.$message->{server}.'_'.$message->{'message_id'}.'_div',
+                          -style=>"margin:0; padding:0; border:0; width: 110px; color: red;" },
+                $q->popup_menu({ -values => $actions,
+                                 -style=>"width: 110px;",
+                                 -default => 0,
+                                 -onChange=>"javascript:message_action('$message->{server}','$message->{message_id}',this,'ac_$message->{server}_$message->{message_id}_div');",
+                                 -labels => { 0 => ':: Select action ::',
+                                              'deliver' => 'Force delivery',
+                                              'cancel' => 'Cancel (bounce)',
+                                              'delete' => 'Delete' },
+                                 -override => 1 }) )
+              ),
+              $q->td({-class=>"queue",
+                      -onMouseDown=>"javascript:document.getElementById('$row_id' + '_headers').style.visibility = 'visible';",
+                      -style=>"font-family: Arial, Helvetica, Sans-Serif;",colspan=>2},
+                $q->div({-class=>"popup_container"},
+                  $q->div({-id=>$row_id.'_headers',
+                           -class=>"popup",
+                           -onDblClick=>"javascript:document.getElementById('$row_id' + '_headers').style.visibility = 'hidden';",
+                           -style=>"width:635px;"},
+                     '<pre style="font-size: 12px;">'.
+                     $headers.
+                     '</pre>'
+                  )
+                ).
+                _shorten_string($message->{subject},100)
+              )
+            )
+          )
         )
       );
   };
 
   $q->div({-class=>"top_spacer"},
-    $q->table({-class=>"queue_table",-cellpadding=>0,-cellspacing=>1,border=>0},
-      $q->Tr(
-        # Table header
-        $q->td({-class=>"queue_header",-width=>"1%"},
-          "&nbsp;"
-        ),
-        $q->td({-class=>"queue_header",-width=>"1%"},
-          "Server"
-        ),
-        $q->td({-class=>"queue_header",-width=>"1%"},
-          "Age"
-        ),
-        $q->td({-class=>"queue_header",-width=>"1%"},
-          "Sender"
-        ),
-        $q->td({-class=>"queue_header",-width=>"1%"},
-          "Recipient(s)"
-        ),
-        $q->td({-class=>"queue_header"},
-          "Subject"
-        )
-      ),
+    $q->table({-class=>"queue_frame_table",-cellpadding=>0,-cellspacing=>0,border=>0},
       $rows
     )
   );
@@ -883,15 +948,15 @@ sub _item {
 
     if (exists($part->{icon})) {
       $html .=
-        $q->td({-class=>"item_icon",-style=>(exists($part->{style}) ? $part->{style} : "")},
-          $q->img({ -src=>$part->{icon},
-                    -title=>(exists($part->{title}) ? $part->{title} : "" ),
-                    -border=>0 })
+        $q->td({ -class=>"item_icon",
+                 -style=>(exists($part->{style}) ? $part->{style} : "")},
+          png($part->{icon},16,16,(exists($part->{title}) ? $part->{title} : "" ))
         );
       next;
     }
     elsif (exists($part->{html})) {
-      $html .= $q->td({-class=>"item_text"}, $part->{html});
+      $html .= $q->td({ -class=>"item_text",
+                    }, $part->{html});
     }
     elsif (exists($part->{text})) {
       # HTML-quote angle brackets
@@ -960,18 +1025,26 @@ sub _shorten_string {
 
 sub _timespan {
   my $amnt = shift;
-  my @steps = (1,60,60,24,7,999999999);
-  my @units = ('s','m','h','d','wk');
+  my $cutoff = shift || 999;
+  my $str = '';
+  my @units = ('wk','d','h','m','s');
+  my @quantums = ( (7*24*60*60*1),
+                   (  24*60*60*1),
+                   (     60*60*1),
+                   (        60*1),
+                   (           1) );  
 
-  my $str = "";
-  while ($amnt > $steps[1]) {
-    my $rest = $amnt % $steps[1];
-    $str = $rest.$units[0]." ".$str;
-    $amnt = int($amnt/$steps[1]);
+  foreach my $quantum (@quantums) {
+    if (int($amnt/$quantum) > 0) {
+      $str .= int($amnt/$quantum).$units[0]." ";
+      $amnt = $amnt%$quantum;
+      last unless (--$cutoff);
+    }
     shift @units;
-    shift @steps;
-  };
-  $str = $amnt.$units[0]." ".$str;
+    last unless ($amnt);
+  }
+  # Fall-through default
+  $str = '0s' unless ($str);
   return $str;
 };
 

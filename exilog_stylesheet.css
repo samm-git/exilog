@@ -91,9 +91,15 @@ select {
   font-size: 10px;
 }
 
-table.queue_table {
-  background: black;
+table.queue_frame_table {
+  border: 0;
   font-size: 12px;
+}
+table.queue_entry_table {
+  background: #999999;
+  margin-bottom: 8px;
+  font-size: 12px;
+  width: 926px;
 }
 td.queue_header {
   background: #cccccc;
@@ -104,15 +110,26 @@ td.queue {
   background: #eeeeee;
   white-space: nowrap;
   padding: 2px 4px 2px 4px;
+  font-family: monospace;
 }
-div.rcpts_pending_popup {
+
+div.popup_container {
+  position: relative;
+  width:0px;
+  height:0px;
+  border:0;
+  margin:0;
+  padding:0;
+}
+div.popup {
   position: absolute;
   visibility: hidden;
-  background: #dddddd;
+  background: #eeeeee;
+  top: -3px;
+  left: -5px;
   color: black;
-  padding: 4px;
-  border: 1px solid black;
-  width: 100px;
+  padding: 2px 4px 2px 4px;
+  border: 1px solid #999999;
 }
 
 td.table_titlebar {

@@ -1,3 +1,43 @@
+// ********************************************************************
+// XMLHTTP stuff
+
+var xmlhttp=false;
+/*@cc_on @*/
+/*@if (@_jscript_version >= 5)
+// JScript gives us Conditional compilation, we can cope with old IE versions.
+// and security blocked creation of the objects.
+ try {
+  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+} catch (e) {
+  try {
+   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+} catch (E) {
+   xmlhttp = false;
+}
+}
+@end @*/
+if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+  xmlhttp = new XMLHttpRequest();
+}
+
+var xmlhttpparent;
+function message_action(myserver,mymsgid,mycontrol,myparent) {
+  xmlhttpparent = myparent;
+  var myaction = mycontrol.options[mycontrol.selectedIndex].value;
+  if (myaction.length < 2) return;
+  xmlhttp.open("GET", "?xmlhttp=1&action="+myaction+"&server="+myserver+"&message_id="+mymsgid,true);
+  xmlhttp.onreadystatechange=function() {
+    if (xmlhttp.readyState==4) {
+      document.getElementById(xmlhttpparent).innerHTML = xmlhttp.responseText;
+    }
+  }
+  xmlhttp.send(null)
+}
+
+
+// ********************************************************************
+// Some generic functions used across the interface
+
 function set_value(myobj,myvalue) {
   document.getElementById(myobj).value = myvalue;
 };
@@ -15,6 +55,10 @@ function link_on(myobj) {
 function link_off(myobj) {
   myobj.style.background = myobj.id;
 };
+
+
+// ********************************************************************
+// JS Code for the picker controls on the "Messages" and "Queues" tabs
 
 var my_controls = new Object;
 my_controls['term'] = new Object;
@@ -77,9 +121,12 @@ function switch_controls(myselection) {
   }
 };
 
-function check_group(group)
-{
- var j, c=document.forms[0].elements, s=c.length;
+
+// ==================================================================
+// "Messages" tab specific
+//
+function check_group(group) {
+   var j, c=document.forms[0].elements, s=c.length;
    for( j=0 ; j<s ; j++ ) {
    if (c[j].name == "sr")
      if( c[j].id == group )
@@ -127,8 +174,63 @@ function sr_changed() {
 };
 
 
+// ==================================================================
+// "Queues" tab specific
+//
+function q_check_group(group) {
+  var j, c=document.forms[0].elements, s=c.length;
+  for( j=0 ; j<s ; j++ ) {
+    if (c[j].name == "q_sr")
+    if( c[j].id == group )
+    c[j].checked = true;
+    else
+      c[j].checked = false;
+  };
+}
+
+function q_ss_changed() {
+  if (document.getElementById('q_ss').selectedIndex == 0) {
+    // "all" was selected, select all
+    var j, c=document.forms[0].elements, s=c.length;
+    for( j=0 ; j<s ; j++ )
+    if (c[j].name == "q_sr") c[j].checked = true;
+  }
+  else if (document.getElementById('q_ss').selectedIndex == 1) {
+    // "custom" was selected, blank all
+    var j, c=document.forms[0].elements, s=c.length;
+    for( j=0 ; j<s ; j++ )
+    if (c[j].name == "q_sr") c[j].checked = false;
+  }
+  else {
+    var group = document.getElementById('q_ss').options[document.getElementById('q_ss').selectedIndex].value;
+    q_check_group(group);
+  };
+};
+
+function q_sr_off_except(myobj) {
+  var j, c=document.forms[0].elements, s=c.length;
+  for( j=0 ; j<s ; j++ )
+  if (c[j].name == "q_sr") c[j].checked = false;
+  myobj.checked = true;
+};
+
+function q_qw_off_except(myobj) {
+  var j, c=document.forms[0].elements, s=c.length;
+  for( j=0 ; j<s ; j++ )
+  if (c[j].name == "q_qw") c[j].checked = false;
+  myobj.checked = true;
+};
+
+function q_sr_changed() {
+  document.getElementById('q_ss').selectedIndex = 1;
+};
 
 
+
+
+// ******************************************************************
+// JS Code for the Date picker control
+//
 
 // ===================================================================
 // Author: Matt Kruse <matt@mattkruse.com>
@@ -1227,6 +1329,3 @@ function CP_getCalendar() {
 	return result;
 	}
 
-
-var cal1x = new CalendarPopup("caldiv1x");
-var cal2x = new CalendarPopup("caldiv2x");

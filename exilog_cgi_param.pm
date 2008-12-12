@@ -57,11 +57,17 @@ sub _init_cgi_params {
               'deferrals',
               'rejects',
               'queue' ],
+    'q_qw' => [ 'frozen',
+                'deferred',
+                'bounce' ],
     'ss' => '-all',
+    'q_ss' => '-all',
     'tr' => '-10m',
-    #'qt' => 'all',
+    'q_tr' => '-5m',
     'qs' => "",
-    'sr' => [ keys %{ $config->{servers} } ]
+    'q_qs' => "",
+    'sr' => [ keys %{ $config->{servers} } ],
+    'q_sr' => [ keys %{ $config->{servers} } ]
   };
 
   foreach (keys %{ $defaults }) {

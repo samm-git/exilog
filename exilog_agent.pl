@@ -50,6 +50,7 @@ unless ($foreground) {
   setsid();
 
   # dup STDOUT/ERR
+  open(STDIN, "< /dev/null");
   open(STDOUT, ">&LOG");
   open(STDERR, ">&LOG");
 }
@@ -140,7 +141,8 @@ sub _queue_actions {
                             'action' => 'delete' } );                       
 
     foreach (@{$deliver}) {
-      system("$exim -qff $_->{message_id} &");
+      system("$exim -Mt $_->{message_id}");
+      system("$exim -Mc $_->{message_id} &");
       sql_queue_clear_action($config->{agent}->{server},$_->{message_id});
     }
 

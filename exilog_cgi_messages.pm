@@ -62,7 +62,7 @@ sub _select_ident {
   }
   my $criteria = { 'timestamp' => (edt($param,'tr') ? _make_tr() : undef),
                    'server' => (edt($param,'sr') ? $param->{'sr'} : undef ),
-                   'host_ident' => $param->{'qs'} };
+                   'host_ident' => dos2sql($param->{'qs'}) };
   # Only messages table
   return sql_select( 'messages', [ 'server','message_id','timestamp' ], $criteria );
 };
@@ -72,7 +72,7 @@ sub _select_msgid {
     return [];
   }
   # Only messages table
-  return sql_select( 'messages', [ 'server','message_id','timestamp' ], { 'msgid' => $param->{'qs'} } );
+  return sql_select( 'messages', [ 'server','message_id','timestamp' ], { 'msgid' => dos2sql($param->{'qs'}) } );
 };
 
 sub _select_message_id {
@@ -82,13 +82,14 @@ sub _select_message_id {
 
   my @results = ();
   my @tables = ( 'deliveries','errors','unknown','deferrals','messages','rejects','queue' );
-  my $criteria = { 'message_id' =>  $param->{'qs'} };
+  my $criteria = { 'message_id' =>  dos2sql($param->{'qs'}) };
   foreach my $table (@tables) {
     push @results, @{ sql_select( $table, [ 'server','message_id','timestamp' ], $criteria ) };
   };
 
   # check bounce parent field too
-  push @results, @{ sql_select( 'messages', [ 'server','message_id','timestamp' ], { 'bounce_parent' =>  $param->{'qs'} } ) };
+  push @results, @{ sql_select( 'messages', [ 'server','message_id','timestamp' ],
+                                 { 'bounce_parent' =>  dos2sql($param->{'qs'}) } ) };
 
   return \@results;
 };
@@ -102,25 +103,25 @@ sub _select_addr {
 
   my @queries;
   push @queries, { 'table' => 'messages',
-                 'criteria' => { 'mailfrom' => $param->{'qs'} } },
+                 'criteria' => { 'mailfrom' => dos2sql($param->{'qs'}) } },
                  { 'table' => 'rejects',
-                 'criteria' => { 'mailfrom' => $param->{'qs'} } }
+                 'criteria' => { 'mailfrom' => dos2sql($param->{'qs'}) } }
     if (($p eq 'sender') || ($p eq 'all'));
 
   push @queries, { 'table' => 'rejects',
-                   'criteria' => { 'rcpt' => $param->{'qs'} } },
+                   'criteria' => { 'rcpt' => dos2sql($param->{'qs'}) } },
                  { 'table' => 'deliveries',
-                   'criteria' => { 'rcpt' => $param->{'qs'} } },
+                   'criteria' => { 'rcpt' => dos2sql($param->{'qs'}) } },
                  { 'table' => 'deliveries',
-                   'criteria' => { 'rcpt_final' => $param->{'qs'} } },
+                   'criteria' => { 'rcpt_final' => dos2sql($param->{'qs'}) } },
                  { 'table' => 'deferrals',
-                   'criteria' => { 'rcpt' => $param->{'qs'} } },
+                   'criteria' => { 'rcpt' => dos2sql($param->{'qs'}) } },
                  { 'table' => 'deferrals',
-                   'criteria' => { 'rcpt_final' => $param->{'qs'} } },
+                   'criteria' => { 'rcpt_final' => dos2sql($param->{'qs'}) } },
                  { 'table' => 'errors',
-                   'criteria' => { 'rcpt' => $param->{'qs'} } },
+                   'criteria' => { 'rcpt' => dos2sql($param->{'qs'}) } },
                  { 'table' => 'errors',
-                   'criteria' => { 'rcpt_final' => $param->{'qs'} } }
+                   'criteria' => { 'rcpt_final' => dos2sql($param->{'qs'}) } }
     if (($p eq 'rcpt') || ($p eq 'all'));
 
 
@@ -145,22 +146,22 @@ sub _select_host {
   }
 
   my @queries;
-  if ($param->{'qs'} =~ /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/) {
-    # IPv4 address
+  if ($param->{'qs'} =~ /^[0-9A-Fa-f.:]+$/) {
+    # IPv4 or IPv6 address
     push @queries, { 'table' => 'messages',
-                     'criteria' => { 'host_addr' => $param->{'qs'} } },
+                     'criteria' => { 'host_addr' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'rejects',
-                     'criteria' => { 'host_addr' => $param->{'qs'} } }
+                     'criteria' => { 'host_addr' => dos2sql($param->{'qs'}) } }
       if (($p eq 'incoming') || ($p eq 'all'));
 
     push @queries, { 'table' => 'deliveries',
-                     'criteria' => { 'host_addr' => $param->{'qs'} } },
+                     'criteria' => { 'host_addr' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'deferrals',
-                     'criteria' => { 'host_addr' => $param->{'qs'} } },
+                     'criteria' => { 'host_addr' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'errors',
-                     'criteria' => { 'host_addr' => $param->{'qs'} } },
+                     'criteria' => { 'host_addr' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'unknown',
-                     'criteria' => { 'line' => '%'.$param->{'qs'}.'%' } }
+                     'criteria' => { 'line' => '%'.dos2sql($param->{'qs'}).'%' } }
       if (($p eq 'outgoing') || ($p eq 'all'));
 
   }
@@ -210,24 +211,24 @@ sub _select_host {
     $suffix_wc = '%' if ($param->{'qs'} !~ /\%$/);
 
     push @queries, { 'table' => 'messages',
-                     'criteria' => { 'host_helo' => $param->{'qs'} } },
+                     'criteria' => { 'host_helo' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'messages',
-                     'criteria' => { 'host_rdns' => $param->{'qs'} } },
+                     'criteria' => { 'host_rdns' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'rejects',
-                     'criteria' => { 'host_helo' => $param->{'qs'} } },
+                     'criteria' => { 'host_helo' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'rejects',
-                     'criteria' => { 'host_rdns' => $param->{'qs'} } }
+                     'criteria' => { 'host_rdns' => dos2sql($param->{'qs'}) } }
       if (($p eq 'incoming') || ($p eq 'all'));
 
     push @queries, { 'table' => 'deliveries',
-                     'criteria' => { 'host_dns' => $param->{'qs'} } },
+                     'criteria' => { 'host_dns' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'deferrals',
-                     'criteria' => { 'host_dns' => $param->{'qs'} } },
+                     'criteria' => { 'host_dns' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'errors',
-                     'criteria' => { 'host_dns' => $param->{'qs'} } },
+                     'criteria' => { 'host_dns' => dos2sql($param->{'qs'}) } },
                    { 'table' => 'unknown',
                      # the blank makes sure that we do not match domains in addresses
-                     'criteria' => { 'line' => $prefix_wc.' '.$param->{'qs'}.$suffix_wc } }
+                     'criteria' => { 'line' => $prefix_wc.' '.dos2sql($param->{'qs'}).$suffix_wc } }
       if (($p eq 'outgoing') || ($p eq 'all'));
   };
 
@@ -524,6 +525,16 @@ sub _update_progress_bar {
 sub _print_Messages_selector {
 	
 	_make_tr();
+
+  # Calendar popup DIVs
+  print "\n".
+  '
+  <script language="JavaScript">
+    var cal1x = new CalendarPopup("caldiv1x");
+    var cal2x = new CalendarPopup("caldiv2x");
+  </script>
+  '
+  ."\n";
 
   print
   $q->div({-class=>"top_spacer"},

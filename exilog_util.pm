@@ -29,6 +29,9 @@ BEGIN {
                       &date_to_stamp
                       &stamp_to_date
                       &human_size
+                      &dos2rx
+                      &dos2sql
+                      &png
                    );
 
   %EXPORT_TAGS = ();
@@ -36,8 +39,41 @@ BEGIN {
   # your exported package globals go here,
   # as well as any optionally exported functions
   @EXPORT_OK   = qw();
+
 }
 
+sub png {
+  my $image = shift;
+  my $width = shift;
+  my $height = shift;
+  my $title = shift || "";
+
+  return '<img src="'.$image.'" width="'.$width.'" height="'.$height.'" title="'.$title.'" border="0">';
+}
+
+
+# turns DOS wildcards (* and ?) into regular expressions
+sub dos2rx {
+  my $cand = shift;
+
+  # quote every funky character
+  $cand =~ s/([^A-Za-z0-9 _?*])/\\$1/g;
+
+  $cand =~ s/\?/./g;
+  $cand =~ s/\*/.*?/g;
+
+  return '^'.$cand.'$';
+};
+
+# turns DOS wildcards (* and ?) into SQL wildcards (% and .)
+sub dos2sql {
+  my $cand = shift;
+
+  $cand =~ s/\*/%/g;
+  $cand =~ s/\?/./g;
+
+  return $cand;
+};
 
 # checks if scalar is in array
 sub ina {
@@ -87,7 +123,7 @@ sub date_to_stamp {
   $year-=1900;
   $month--;
 
-	# This is for parsing timestamps that include GMT offsets
+  # This is for parsing timestamps that include GMT offsets
   if (edv($junk)) {
     my $hoff = ($junk =~ /[-+](\d\d)\d\d/);
     my $moff = ($junk =~ /[-+]\d\d(\d\d)/);
@@ -98,7 +134,7 @@ sub date_to_stamp {
     else {
       $hour = $hour + $hoff;
       $minute = $minute + $moff;
-    }   
+    }
   };
 
   if ($config->{web}->{timestamps} eq 'local') {

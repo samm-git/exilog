@@ -19,10 +19,23 @@ use exilog_sql;
 # Put user name into global variable
 my $user = $ENV{'REMOTE_USER'} || 'anonymous';
 
+# XMLHTTP requests are handled here.
+# We only return short result statements
+# in text/plain format for those.
+if ($param->{'xmlhttp'} == 1) {
+  print $q->header(-expires=>'Thursday, 01-Jan-1970 00:00:01 GMT',
+                   -Expires=>'now',
+                   -Content-Type=>'text/plain',
+                   -Cache-Control=>'no-cache',
+                   -Cache-Control=>'no-store',
+                   -Pragma=>'no-cache');
+  print _do_xmlhttp_actions();
+  exit(0);
+}
+
 _print_cgi_headers();
 _print_html_header();
 _print_html_tabs();
-_do_global_actions();
 
 print '<div class="display" align="center">';
 if ($param->{tab} eq 'queues') {
@@ -44,23 +57,19 @@ _print_html_footer();
 
 # -- Private functions ---------------------------------------------------------
 
-sub _do_global_actions {
-
+sub _do_xmlhttp_actions {
   # queue actions
   my $valid_actions = [ 'deliver', 'cancel', 'delete' ];
   my $restricted_actions = [ 'cancel', 'delete' ];
-  foreach my $p (keys %{ $param }) {
-    if ($p =~ /^ac_([A-Za-z0-9_.-]+?)_([A-Za-z0-9]{6}\-[A-Za-z0-9]{6}-[A-Za-z0-9]{2})$/) {
-      my $server = $1;
-      my $message_id = $2;
-      my $action = $param->{$p};
-      if (ina($valid_actions,$action)) {
-        next if (ina($restricted_actions,$action) && ina($config->{web}->{restricted_users},$main::user));
-        sql_queue_set_action($server,$message_id,$action);
-      }
-    }
+  my $action_text = { 'deliver' => 'Forcing', 'cancel' => 'Cancelling', 'delete' => 'Deleting' };  
+
+  if ( ina($valid_actions,$param->{'action'}) &&
+       !(ina($restricted_actions,$param->{'action'}) && ina($config->{web}->{restricted_users},$main::user)) ) {
+    sql_queue_set_action($param->{'server'},$param->{'message_id'},$param->{'action'});
+    return $action_text->{$param->{'action'}};
   }
 
+  return 0;
 };
 
 
@@ -91,7 +100,7 @@ sub _print_html_header {
 sub _print_html_tabs {
   my $tabs = { 'servers' => "Servers",
                'messages' => "Messages",
-               #'queues' => "Queues", # Queue manager is still unfinished ...
+               'queues' => "Queues",
                'messages' => "Messages" };
 
   my $html;

@@ -146,7 +146,7 @@ sub _pgsql_sql_count {
 sub _pgsql_sql_queue_delete {
   my $spool_path = shift;
 
-  $dbh->do("DELETE FROM queue WHERE spool_path='$spool_path'");
+  $dbh->do("DELETE FROM queue WHERE spool_path=".$dbh->quote($spool_path));
 };
 
 sub _pgsql_sql_queue_update {
@@ -170,13 +170,12 @@ sub _pgsql_sql_queue_update {
 
   my @tmp;
   foreach my $item (keys %{ $hdr }) {
-    my $value = $hdr->{$item};
-    $value =~ s/\'/\'\'/g;
-    $value =~ s/\n/\\n/g;
-    push @tmp, $item.'='."'".$value."'";
+    push @tmp, $item.'='.$dbh->quote($hdr->{$item});
   };
 
-  $dbh->do("UPDATE queue SET ".join(",",@tmp)." WHERE message_id='".$message_id."' AND server='".$server."'");
+  $dbh->do("UPDATE queue SET ".join(",",@tmp).
+           " WHERE message_id=".$dbh->quote($message_id).
+           " AND server=".$dbh->quote($server));
 };
 
 sub _pgsql_sql_queue_add {
@@ -196,10 +195,7 @@ sub _pgsql_sql_queue_add {
   my @fields = sort {$a cmp $b} keys(%{$hdr});
   my @vals = ();
   foreach (@fields) {
-    my $val = $hdr->{$_};
-    $val =~ s/\'/\'\'/g;
-    $val =~ s/\n/\\n/g;
-    push @vals, "'".$val."'";
+    push @vals, $dbh->quote($hdr->{$_});
   };
 
   $dbh->do("INSERT INTO queue (".join(',',@fields).") VALUES(".join(',',@vals).")");
@@ -269,7 +265,9 @@ sub _pgsql_write_message {
   # Special case: we only need to UPDATE the 'completed' field
   # in the messages table.
   if ( ($h->{table} eq 'messages') && (exists($h->{data}->{completed})) ) {
-    my $rc = $dbh->do("UPDATE messages SET completed='".$h->{data}->{completed}."' WHERE message_id='".$h->{data}->{message_id}."' AND server='".$server."'");
+    my $rc = $dbh->do("UPDATE messages SET completed=".$dbh->quote($h->{data}->{completed}).
+                      " WHERE message_id=".$dbh->quote($h->{data}->{message_id}).
+                      " AND server=".$dbh->quote($server));
     if (defined($rc)) {
       return 1;
     }
@@ -280,15 +278,9 @@ sub _pgsql_write_message {
   }
   else {
     my @fields = sort {$a cmp $b} keys(%{$h->{data}});
-    my @vals = ( "'".$server."'" );
-    foreach (@fields) {            
-      my $val = $h->{data}->{$_};
-      $val =~ s/\'/\'\'/g;
-      # shorten $val to limit and remove eventual
-      # trailing quote and backslash characters.
-      $val = substr($val,0,255);
-      $val =~ s/[\\']+$//;
-      push @vals, "'".$val."'";
+    my @vals = ( $dbh->quote($server) );
+    foreach (@fields) {
+      push @vals, $dbh->quote(substr($h->{data}->{$_},0,255));
     };
     unshift @fields, 'server';
 
@@ -327,7 +319,7 @@ sub _mysql_sql_count {
 sub _mysql_sql_queue_delete {
   my $spool_path = shift;
 
-  $dbh->do("DELETE FROM queue WHERE spool_path='$spool_path'");
+  $dbh->do("DELETE FROM queue WHERE spool_path=".$dbh->quote($spool_path));
 };
 
 sub _mysql_sql_queue_update {
@@ -342,13 +334,12 @@ sub _mysql_sql_queue_update {
 
   my @tmp;
   foreach my $item (keys %{ $hdr }) {
-    my $value = $hdr->{$item};
-    $value =~ s/\'/\'\'/g;
-    $value =~ s/\n/\\n/g;
-    push @tmp, $item.'='."'".$value."'";
+    push @tmp, $item.'='.$dbh->quote($hdr->{$item});
   };
 
-  $dbh->do("UPDATE queue SET ".join(",",@tmp)." WHERE message_id='".$message_id."' AND server='".$server."'");
+  $dbh->do("UPDATE queue SET ".join(",",@tmp).
+           " WHERE message_id=".$dbh->quote($message_id).
+           " AND server=".$dbh->quote($server));
 };
 
 sub _mysql_sql_queue_add {
@@ -359,10 +350,7 @@ sub _mysql_sql_queue_add {
   my @fields = sort {$a cmp $b} keys(%{$hdr});
   my @vals = ();
   foreach (@fields) {
-    my $val = $hdr->{$_};
-    $val =~ s/\'/\'\'/g;
-    $val =~ s/\n/\\n/g;
-    push @vals, "'".$val."'";
+    push @vals, $dbh->quote($hdr->{$_});
   };
 
   $dbh->do("INSERT INTO queue (".join(',',@fields).") VALUES(".join(',',@vals).")");
@@ -373,14 +361,17 @@ sub _mysql_sql_queue_set_action {
   my $message_id = shift;
   my $action = shift;
 
-  $dbh->do("UPDATE queue SET action='$action' WHERE server='$server' AND message_id='$message_id'");
+  $dbh->do("UPDATE queue SET action=".$dbh->quote($action).
+           " WHERE server=".$dbh->quote($server).
+           " AND message_id=".$dbh->quote($message_id));
 };
 
 sub _mysql_sql_queue_clear_action {
   my $server = shift;
   my $message_id = shift;
   
-  $dbh->do("UPDATE queue SET action=NULL WHERE server='$server' AND message_id='$message_id'");
+  $dbh->do("UPDATE queue SET action=NULL WHERE server=".$dbh->quote($server).
+           " AND message_id=".$dbh->quote($message_id));
 };
 
 
@@ -439,7 +430,9 @@ sub _mysql_write_message {
   # Special case: we only need to UPDATE the 'completed' field
   # in the messages table.
   if ( ($h->{table} eq 'messages') && (exists($h->{data}->{completed})) ) {
-    my $rc = $dbh->do("UPDATE messages SET completed='".$h->{data}->{completed}."' WHERE message_id='".$h->{data}->{message_id}."' AND server='".$server."'");
+    my $rc = $dbh->do("UPDATE messages SET completed=".$dbh->quote($h->{data}->{completed}).
+                      " WHERE message_id=".$dbh->quote($h->{data}->{message_id}).
+                      " AND server=".$dbh->quote($server));
     if (defined($rc)) {
       return 1;
     }
@@ -450,15 +443,9 @@ sub _mysql_write_message {
   }
   else {
     my @fields = sort {$a cmp $b} keys(%{$h->{data}});
-    my @vals = ( "'".$server."'" );
+    my @vals = ( $dbh->quote($server) );
     foreach (@fields) {
-      my $val = $h->{data}->{$_};
-      $val =~ s/\'/\'\'/g;
-      # shorten $val to limit and remove eventual
-      # trailing quote and backslash characters.
-      $val = substr($val,0,255);
-      $val =~ s/[\\']+$//;
-      push @vals, "'".$val."'";
+      push @vals, $dbh->quote(substr($h->{data}->{$_},0,255));
     };
     unshift @fields, 'server';
 
@@ -525,7 +512,7 @@ sub _build_WHERE {
       # array ref, use exact string match with OR
       my $str = "( ";
       foreach my $entry (@{ $criteria->{$col} }) {
-        $str .= " ".$col." = '".$entry."' OR";
+        $str .= " ".$col." = ".$dbh->quote($entry)." OR";
       };
       chop($str);chop($str);
       $str .= " )";
@@ -537,14 +524,14 @@ sub _build_WHERE {
       if (($criteria->{$col} =~ /\%/) || ($criteria->{$col} =~ /\_/)) {
         # use ILIKE for PGSQL
         if ($config->{sql}->{type} eq 'pgsql') {
-          push @set, $col." ILIKE '".$criteria->{$col}."'";
+          push @set, $col." ILIKE ".$dbh->quote($criteria->{$col});
         }
         else {
-          push @set, $col." LIKE '".$criteria->{$col}."'";
+          push @set, $col." LIKE ".$dbh->quote($criteria->{$col});
         };
       }
       else {
-        push @set, $col." = '".$criteria->{$col}."'";
+        push @set, $col." = ".$dbh->quote($criteria->{$col});
       };
     };
   };
