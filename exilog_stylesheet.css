@@ -1,0 +1,233 @@
+body {
+  margin: 0;
+  padding: 16px 0px 16px 0px;
+  background: #333333;
+}
+div.body {
+  margin: 0;
+  padding: 0;
+  width: 960px;
+  background: #bbeebb;
+  font-family: Arial, Helvetica, Sans-Serif;
+  font-size: 12px;
+}
+
+table {
+  font-family: Arial, Helvetica, Sans-Serif;
+  font-size: 12px;
+}
+img {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  display: block;
+}
+div.top_spacer {
+  padding: 16px 0px 0px 0px;
+  margin: 0;
+  border: 0;
+}
+
+div.display {
+  padding: 0px 16px 16px 16px;
+  /* border-left: 1px solid #ccffcc; */
+  /* border-right: 1px solid #449922; */
+  /* border-bottom: 1px solid #449922; */
+}
+table.logo {
+  width: 100%;
+  background: #333333;
+  color: white;
+}
+td.logo_title {
+  font-size: 16px;
+  font-weight: bold;
+}
+td.logo_text {
+  font-size: 12px;
+  vertical-align: top;
+  text-align: right;
+}
+
+table.tabs {
+  width: 100%;
+}
+td.tabs_static {
+  background: #ff5500;
+  color: white;
+  border-top: 1px solid  #ee6600;
+  border-left: 1px solid  #ee6600;
+  /* border-bottom: 1px solid #ccffcc; */
+}
+td.tabs_click {
+  font-size: 16px;
+  text-align: center;
+  border-top: 1px solid #339944;
+  border-left: 1px solid #339944;
+  /* border-bottom: 1px solid #ccffcc; */
+  background: #227733;
+  color: #dddddd;
+  cursor: pointer;
+  cursor: hand;
+}
+td.tabs_active {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  border-top: 1px solid #ccffcc;
+  border-left: 1px solid #ccffcc;
+  background: #bbeebb;
+  color: black;
+}
+td.tabs_spacer {
+  /* border-bottom: 1px solid #ccffcc; */
+  background: #333333;
+}
+
+input {
+  font-size: 10px;
+}
+select {
+  font-size: 10px;
+}
+
+table.queue_table {
+  background: black;
+  font-size: 12px;
+}
+td.queue_header {
+  background: #cccccc;
+  font-weight: bold;
+  padding: 2px 4px 2px 4px;
+}
+td.queue {
+  background: #eeeeee;
+  white-space: nowrap;
+  padding: 2px 4px 2px 4px;
+}
+div.rcpts_pending_popup {
+  position: absolute;
+  visibility: hidden;
+  background: #dddddd;
+  color: black;
+  padding: 4px;
+  border: 1px solid black;
+  width: 100px;
+}
+
+td.table_titlebar {
+  padding: 2;
+  background: #ffffff;
+}
+
+td.table_arrival {
+  padding: 2;
+  background: #eeeeee;
+}
+
+td.table_queue {
+  padding: 2;
+  background: #eeeeee;
+}
+
+td.table_delivery {
+  padding: 2;
+  background: #eeeeee;
+}
+
+td.table_error {
+  padding: 2;
+  background: #eeeeee;
+}
+
+td.table_deferral {
+  padding: 2;
+  background: #eeeeee;
+}
+
+td.table_unknown {
+  padding: 2;
+  background: #eeeeee;
+}
+
+td.table_reject {
+  padding: 2;
+  background: #eeeeee;
+}
+
+table.stats {
+  width: 926px;
+  background: #999999;
+  margin: 0;
+}
+td.table_stats {
+  padding: 8px 4px 8px 4px;
+  background: #eeeeee;
+}
+td.stats {
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: left;
+  width: 1%;
+}
+
+table.message {
+  width: 926px;
+  background: #999999;
+  margin: 0;
+}
+td.message {
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: center;
+  width: 1%;
+}
+td.message_wide {
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: left;
+}
+
+table.header {
+  width: 926px;
+  background: #999999;
+  margin: 0;
+}
+td.header {
+  color: white;
+  background: black;
+  padding: 4px 4px 4px 4px;
+}
+
+
+td.large_icon {
+  padding: 0px 4px 0px 4px;
+  white-space: nowrap;
+}
+td.large_text {
+  padding: 0px 8px 0px 0px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+
+table.item {
+  font-family: monospace;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+tr.item_link {
+  cursor: hand;
+  cursor: pointer;
+}
+td.item_icon {
+  padding: 0px 0px 0px 4px;
+  vertical-align: top;
+}
+td.item_text {
+  padding: 0px 4px 0px 4px;
+  vertical-align: top;
+  white-space: nowrap;
+}
+

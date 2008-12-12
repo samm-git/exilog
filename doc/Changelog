@@ -1,0 +1,31 @@
+0.5  - Feature: Add support for basic user access
+       levels.
+     - Feature: Add support to deliver,cancel and
+       delete queued messages.
+     - Make "pretty process names" for the agent
+       configurable (Thanks to Sven Hartge).
+
+0.4  - Fix network matching code
+     - Add pidfile support for the agent.
+       (Thanks to Sven Hartge)
+     - Add support for "log_timezone = true"
+       (Thanks to Jeremy Harris)
+
+0.3  - Fix detection of post-DATA rejects
+       (Thanks to Chris Lear)
+     - Fix quoting of "completed" timestamp
+       in exilog_sql.pm.
+     - Fix delivery parsing when +sender_on_delivery
+       is set.
+     - Docs: mention exilog_cleanup.pl.
+     - Docs: mention possibility to run the
+       agent non-root.
+
+0.2  - Use FindBin to find out binary location
+     - Fix bug in SQL quoting.
+     - Remove link from "Server" to the unfinished
+       Queue display :)
+     - Docs: Mention Net::Netmask prerequisite.
+     - Docs: Add small usage section.
+
+0.01 Initial Release

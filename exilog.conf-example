@@ -1,0 +1,143 @@
+{ # DO NOT REMOVE THIS BRACKET
+
+  # Exilog config file. Read the comments. Obey the syntax.
+  # (c) Tom Kistner 2005
+
+
+    'servers' => { # ------------------------------------
+      # Server definitions. One block per server,
+      # separated with comma.
+
+      # Currently, each server only has a single
+      # property: Its group membership. Groups are
+      # just strings that bundle servers. Each
+      # server can only be in one group.
+
+      # Keep the server names short (do not use FQDN).
+      # Likewise, keep the group names short.
+
+      'foobar' => {
+                     'group' => 'MXes'
+                  },
+
+      'fanucci' => {
+                     'group' => 'MXes'
+                   }
+
+    }, # End of server definitions ----------------------
+
+
+    'sql' => { # ----------------------------------------
+      # SQL Server definition. Use one of the following
+      # blocks as a template.
+
+      # Example for local MySQL server
+      'type'     => 'mysql',
+      'DBI'      => 'DBI:mysql:database=exilog;',
+      'user'     => 'myuser', 
+      'pass'     => 'mypass'
+
+      # Example for remote MySQL server
+      #'type'     => 'mysql',
+      #'DBI'      => 'DBI:mysql:database=exilog;host=foobar.duncanthrax.net;port=3306',
+      #'user'     => 'myuser',
+      #'pass'     => 'mypass'
+
+      # Example for Postgresql server
+      #'type'     => 'pgsql',
+      #'DBI'      => 'DBI:Pg:dbname=exilog;host=195.2.162.40;port=5432;',
+      #'user'     => 'myuser',
+      #'pass'     => 'mypass'
+
+   }, # End of SQL server definition --------------------
+
+
+   'agent' => { # ---------------------------------------
+     # Agent configuration.
+
+     # The agent writes a log file. You can also
+     # use /dev/null here once things are running 
+     # smoothly.
+     'log' => '/var/log/exilog_agent',
+
+     # The agent writes its PID into this file. Useful,
+     # if you want to start the agent using a command
+     # like start-stop-daemon.
+     'pidfile' => '/var/run/exilog-agent.pid',
+
+     # If this is set to 'no', the agent will NOT change
+     # its process names to be more informative. This will
+     # prevent problems on systems that restrict changes
+     # to process names for security reasons (Debian and
+     # NetBSD for example).
+     #'use_pretty_names' => 'no',
+
+     # The server the agent is running on. MUST
+     # be one of the names specified in the
+     # 'Servers' section above.
+     'server' => 'foobar',
+
+     # The log(s) to monitor. If you log via syslog,
+     # this will only be a single file (typically
+     # /var/log/mail). If you use Exim's own logging,
+     # you should specify the mainlog and rejectlog here.
+     'logs' => [
+                 '/var/log/maillog'
+               ],
+
+     # Path to Exim's queue directory.
+     'queue' => '/var/spool/exim',
+
+     # Path to your Exim binary
+     'exim' => '/usr/sbin/exim',
+
+     # Delay between two queue listing refreshes.
+     # Thirty seconds is reasonable.
+     'queue_refresh_delay' => 30
+
+   }, # End of Exilog Agent configuration ---------------
+
+
+   'cleanup' => { # -------------------------------------
+     # Configuration for the database cleanup tool
+     # (exilog_cleanup.pl).
+
+     # How many days worth of logs to keep in the
+     # database. 10 days is somehow reasonable. If
+     # you run a small shop you can also keep months
+     # of logs. If you run a VERY big shop you might
+     # want to reduce this number or buy some more
+     # processing power.
+     'cutoff' => 10
+      
+   }, # End of exilog_cleanup.pl configuration ---------- 
+
+
+   'web' => { # -----------------------------------------
+     # Options for the web interface.
+ 
+     # Defines how the web interface shows timestamps.
+     # Use 'local' to use the local time of the HTTP server
+     # machine, or use 'gmt' to use normalized GMT
+     # timestamps.
+     # TIP: If all of your machines are in one time zone,
+     # use 'local'.
+     'timestamps' => 'local',
+     
+     # When using basic auth to restrict access to the web
+     # interface, you can define users to be "read-only".
+     # They will not be able to cancel or delete messages
+     # (but they can start a delivery run). Clients that
+     # do not authenticate are mapped to a user name
+     # of "anonymous".
+     'restricted_users' => [
+       'anonymous',
+       'bob',
+       'alice',
+       'peter'
+     ]
+
+   } # End of web interface configuration ---------------
+};
+
+# EOF
