@@ -58,12 +58,12 @@
      # The agent writes a log file. You can also
      # use /dev/null here once things are running 
      # smoothly.
-     'log' => '/var/log/exilog_agent',
+     'log' => '/var/log/exilog.log',
 
      # The agent writes its PID into this file. Useful,
      # if you want to start the agent using a command
      # like start-stop-daemon.
-     'pidfile' => '/var/run/exilog-agent.pid',
+     'pidfile' => '/var/run/exilog/agent.pid',
 
      # If this is set to 'no', the agent will NOT change
      # its process names to be more informative. This will
@@ -82,11 +82,11 @@
      # /var/log/mail). If you use Exim's own logging,
      # you should specify the mainlog and rejectlog here.
      'logs' => [
-                 '/var/log/maillog'
+                 '/var/log/exim4/mainlog'
                ],
 
      # Path to Exim's queue directory.
-     'queue' => '/var/spool/exim',
+     'queue' => '/var/spool/exim4',
 
      # Path to your Exim binary
      'exim' => '/usr/sbin/exim',
