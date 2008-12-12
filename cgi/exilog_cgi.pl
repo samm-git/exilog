@@ -10,6 +10,10 @@
 #
 
 use strict;
+
+use lib "/usr/lib/exilog";
+use lib "/usr/lib/cgi-bin/exilog";
+
 use exilog_config;
 use exilog_util;
 use exilog_cgi_html;
