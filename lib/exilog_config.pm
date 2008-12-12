@@ -36,7 +36,7 @@ BEGIN {
   use vars qw( $config $version );
 }
 
-$version = "0.5";
+$version = "0.5.1";
 
 $config = _read_ph("/etc/exilog/exilog.conf");
 
