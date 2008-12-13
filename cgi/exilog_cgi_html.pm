@@ -820,12 +820,12 @@ sub render_queue_table {
     my $rcpts_html = "";
     foreach my $rcpt (@rcpts_pending) {
       $rcpts_html .=
-        _item( { 'icon' => 'icons/deferred.png' },
+        _item( { 'icon' => $config->{web}->{webroot}.'icons/deferred.png' },
                { 'text' => $rcpt } );
     }
     foreach my $rcpt (@rcpts_delivered) {
       $rcpts_html .=
-        _item( { 'icon' => 'icons/delivered.png' },
+        _item( { 'icon' => $config->{web}->{webroot}.'icons/delivered.png' },
                { 'text' => $rcpt } );
     }
     my $headers = $message->{headers};
@@ -842,17 +842,17 @@ sub render_queue_table {
                        -width=>32,
                        -rowspan=>2},
                 ( edt($message,'frozen') ?
-                     png("icons/queue_frozen.png",32,32,"Frozen at ".stamp_to_date($message->{frozen}))
+                     png($config->{web}->{webroot}."icons/queue_frozen.png",32,32,"Frozen at ".stamp_to_date($message->{frozen}))
                    :
-                     png("icons/queue_deferred.png",32,32,"")
+                     png($config->{web}->{webroot}."icons/queue_deferred.png",32,32,"")
                 )
               ),
               $q->td({-class=>"queue"},
-                _item( { 'icon' => "icons/server.png" },
+                _item( { 'icon' => $config->{web}->{webroot}."icons/server.png" },
                        { 'text' => $message->{server} } )
               ),
               $q->td({-class=>"queue", -align=>"center"},
-                _item( { 'icon' => "icons/timerange.png" },
+                _item( { 'icon' => $config->{web}->{webroot}."icons/timerange.png" },
                        { 'text' => (edt($message,'timestamp') ?
                                     _timespan($now - $message->{timestamp},2)
                                     :
@@ -860,7 +860,7 @@ sub render_queue_table {
               ),
               $q->td({ -class=>"queue",
                        -width=>"300" },
-                _item( { 'icon' => "icons/arrival.png" },
+                _item( { 'icon' => $config->{web}->{webroot}."icons/arrival.png" },
                        { 'text' => _shorten_addr($message->{mailfrom},40) } )
               ),
               $q->td({-class=>"queue",
@@ -873,7 +873,7 @@ sub render_queue_table {
                      $rcpts_html
                   )
                 ).
-                _item( { 'icon' => "icons/deferred.png" }, 
+                _item( { 'icon' => $config->{web}->{webroot}."icons/deferred.png" },
                        { 'html' => _shorten_addr($rcpts_pending[0],40).
                                     ( ((scalar @rcpts_pending) + (scalar @rcpts_delivered) > 1) ?
                                     ' (+'.((scalar @rcpts_pending)+(scalar @rcpts_delivered)-1).'&darr;)' : "" ) } )
