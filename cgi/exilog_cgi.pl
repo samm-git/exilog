@@ -96,7 +96,7 @@ sub _print_html_header {
                                  ],
                         -meta=>{'http-equiv' => 'pragma', 'content' => 'no-cache'}});
   # global "centering" div
-  print $q->start_form({-name=>"exilogform",-method=>"GET"});
+  print $q->start_form({-name=>"exilogform",-method=>"POST", enctype => "multipart/form-data"});
   print '<div align="center">';
   print '<div align="center" class="body">';
 };
