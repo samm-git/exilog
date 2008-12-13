@@ -67,7 +67,10 @@ if ( ! -r $cfg_file ) {
 $config = _read_ph($cfg_file);
 
 # check if user forgots to add a trailing slash - if so, add it here
-if ( $config->{web}->{webroot} !~ /\/$/ ) {
+if (
+    defined($config->{web}->{webroot}) &&
+    $config->{web}->{webroot} !~ /\/$/
+  ) {
   $config->{web}->{webroot}.="/";
 }
 
