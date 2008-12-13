@@ -66,6 +66,11 @@ if ( ! -r $cfg_file ) {
 
 $config = _read_ph($cfg_file);
 
+# check if user forgots to add a trailing slash - if so, add it here
+if ( $config->{web}->{webroot} !~ /\/$/ ) {
+  $config->{web}->{webroot}.="/";
+}
+
 unless ($config) {
   print STDERR "($$) [exilog_config] Can't parse configuration file.\n";
   exit(0);
