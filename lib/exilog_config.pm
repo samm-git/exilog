@@ -11,9 +11,9 @@
 
 package exilog_config;
 use strict;
+use Fcntl ':mode';
 
 use lib "/usr/lib/exilog/";
-
 
 BEGIN {
   use Exporter;
@@ -36,9 +36,35 @@ BEGIN {
   use vars qw( $config $version );
 }
 
+my $cfg_file = "/etc/exilog/exilog.conf";
+
 $version = "0.5.1";
 
-$config = _read_ph("/etc/exilog/exilog.conf");
+# check file permissions of exilog.conf
+
+my $mode = (stat($cfg_file))[2];
+# mask out file type;
+$mode = $mode & 07777;
+# we care only about others now
+$mode = $mode & 0007;
+
+if ( $mode > 0 ) {
+  print STDERR "($$) [exilog_config] Attention - $cfg_file is readable by 'others'. Fix file permissions!\n";
+  exit(0);
+}
+
+if ( ! -e $cfg_file ) {
+  print STDERR "($$) [exilog_config] $cfg_file does not exist!\n";
+  exit(0);
+}
+
+if ( ! -r $cfg_file ) {
+  my $username = getpwuid($<);
+  print STDERR "($$) [exilog_config] $cfg_file is not readable by user ". $username ."!\n";
+  exit(0);
+}
+
+$config = _read_ph($cfg_file);
 
 unless ($config) {
   print STDERR "($$) [exilog_config] Can't parse configuration file.\n";
