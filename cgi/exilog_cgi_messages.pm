@@ -781,7 +781,7 @@ sub _print_Messages_selector {
                           -style=>"height: 18px; width: 18px;",
                           -id=>"anchor1x" })."&nbsp;-&nbsp;".
              $q->div({ -id=>'caldiv1x',
-                       -style=>"position:absolute;visibility:hidden;background-color:white;layer-background-color:white;" })
+                       -style=>"position:absolute;visibility:hidden;background-color:white;background-color:white;" })
            ),
            $q->td({-align=>"left",-style=>"padding-left:0px;"},
              $q->input({-name=>"tde",
@@ -795,7 +795,7 @@ sub _print_Messages_selector {
                           -style=>"height: 18px; width: 18px;",
                           -id=>"anchor2x" }).
              $q->div({ -id=>'caldiv2x',
-                       -style=>"position:absolute;visibility:hidden;background-color:white;layer-background-color:white;" })
+                       -style=>"position:absolute;visibility:hidden;background-color:white;background-color:white;" })
            )
          )
        )

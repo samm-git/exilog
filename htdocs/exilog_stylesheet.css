@@ -5,7 +5,7 @@ body {
 }
 div.body {
   margin: 0;
-  padding: 0;
+  padding: 0px;
   width: 960px;
   background: #bbeebb;
   font-family: Arial, Helvetica, Sans-Serif;
@@ -17,7 +17,7 @@ table {
   font-size: 12px;
 }
 img {
-  padding: 0;
+  padding: 0px;
   margin: 0;
   border: 0;
   display: block;
@@ -68,7 +68,6 @@ td.tabs_click {
   background: #227733;
   color: #dddddd;
   cursor: pointer;
-  cursor: hand;
 }
 td.tabs_active {
   font-size: 16px;
@@ -119,7 +118,7 @@ div.popup_container {
   height:0px;
   border:0;
   margin:0;
-  padding:0;
+  padding:0px;
 }
 div.popup {
   position: absolute;
@@ -133,42 +132,42 @@ div.popup {
 }
 
 td.table_titlebar {
-  padding: 2;
+  padding: 2px;
   background: #ffffff;
 }
 
 td.table_arrival {
-  padding: 2;
+  padding: 2px;
   background: #eeeeee;
 }
 
 td.table_queue {
-  padding: 2;
+  padding: 2px;
   background: #eeeeee;
 }
 
 td.table_delivery {
-  padding: 2;
+  padding: 2px;
   background: #eeeeee;
 }
 
 td.table_error {
-  padding: 2;
+  padding: 2px;
   background: #eeeeee;
 }
 
 td.table_deferral {
-  padding: 2;
+  padding: 2px;
   background: #eeeeee;
 }
 
 td.table_unknown {
-  padding: 2;
+  padding: 2px;
   background: #eeeeee;
 }
 
 td.table_reject {
-  padding: 2;
+  padding: 2px;
   background: #eeeeee;
 }
 
@@ -231,11 +230,10 @@ td.large_text {
 table.item {
   font-family: monospace;
   border: 0;
-  padding: 0;
+  padding: 0px;
   margin: 0;
 }
 tr.item_link {
-  cursor: hand;
   cursor: pointer;
 }
 td.item_icon {

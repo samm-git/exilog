@@ -974,7 +974,7 @@ sub _item {
       $html .=
         $q->td({-class=>"item_text",
                 ($link ? ( -onClick=>"javascript:document.location.href='$link';",
-                           -style=>(exists($part->{style}) ? $part->{style} : "")."cursor:pointer;cursor:hand;",
+                           -style=>(exists($part->{style}) ? $part->{style} : "")."cursor:pointer;",
                            -onMouseOver=>"javascript:link_on(this);",
                            -onMouseOut=>"javascript:link_off(this);" )
                 : (
