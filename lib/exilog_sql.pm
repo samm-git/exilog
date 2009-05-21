@@ -149,10 +149,20 @@ sub _pgsql_sql_count {
   return @{$tmp}[0];
 };
 
+# Postgres has no REPLACE command so the best thing to do is
+# check to see if there exists any heartbeat record before
+# attempting to UPDATE one. If it's not there, lets INSERT one.
 sub _pgsql_sql_update_heartbeat {
   my $now = time();
+  my $existing_beat = $dbh->do("SELECT timestamp from heartbeats WHERE server = '". $config->{agent}->{server} ."'");
 
-  $dbh->do("REPLACE heartbeats SET server='". $config->{agent}->{server} ."', timestamp='". $now ."'");
+  if ($existing_beat != '1') {
+      $dbh->do("INSERT INTO heartbeats(timestamp, server) VALUES('". $now ."', '". $config->{agent}->{server} ."')");
+     }
+      else
+     {
+      $dbh->do("UPDATE heartbeats SET timestamp = '". $now ."' WHERE server = '". $config->{agent}->{server} ."'");
+     }
 };
 
 sub _pgsql_sql_queue_delete {
@@ -213,15 +223,26 @@ sub _pgsql_sql_queue_add {
   $dbh->do("INSERT INTO queue (".join(',',@fields).") VALUES(".join(',',@vals).")");
 };
 
+sub _pgsql_sql_queue_set_action {
+  my $server = shift;
+  my $message_id = shift;
+  my $action = shift;
+
+  $dbh->do("UPDATE queue SET action=".$dbh->quote($action).
+           " WHERE server=".$dbh->quote($server).
+           " AND message_id=".$dbh->quote($message_id));
+};
+
+sub _pgsql_sql_queue_clear_action {
+  my $server = shift;
+  my $message_id = shift;
+
+  $dbh->do("UPDATE queue SET action=NULL WHERE server=".$dbh->quote($server).
+           " AND message_id=".$dbh->quote($message_id));
+};
+
 sub _pgsql_sql_optimize {
-  my $where = shift || "nothing";
-
-  my $sql = "OPTIMIZE TABLE ".$where;
-  my $sh = $dbh->prepare($sql);
-  $sh->execute;
-  $sh->finish;
-
-  return 1;
+  return 1; #postgres doesn't need to do anything as long as autovaccum is on
 };
 
 sub _pgsql_sql_delete {
