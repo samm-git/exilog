@@ -85,6 +85,12 @@
                  '/var/log/exim4/mainlog'
                ],
 
+     # If you want to change exilogs default behavior to not
+     # parse the whole log file but instead start watching
+     # for new lines appended to the log file, set the
+     # following parameter to 1
+     'read_from_end' => 0,
+
      # Path to Exim's queue directory.
      'queue' => '/var/spool/exim4',
 

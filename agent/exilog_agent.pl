@@ -422,8 +422,13 @@ sub _tail {
   use exilog_sql;
   reconnect();
 
-  my $curpos;
+  my $curpos = 0;
   my $fsize = (-s $logfile);
+  if ( $config->{agent}->{read_from_end} == 1 ) {
+    $curpos=$fsize;
+  }
+  seek(LOGFILE, $curpos, 0);
+  print STDERR "($$) [exilog_agent:_tail] starting read ($logfile) from pos $curpos\n" ;
   for (;;) {
     for ($curpos = tell(LOGFILE);
          $_ = <LOGFILE>;
