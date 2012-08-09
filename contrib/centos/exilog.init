@@ -1,0 +1,69 @@
+#! /bin/bash
+#
+# exilog exim log analizator daemon
+#
+# chkconfig: - 90 10
+# description: exilog is exim log analyzator daemon
+# processname: exilog
+# pidfile: /var/run/exilog-agent.pid
+# config: /etc/exilog/exilog.conf
+
+# Source function library.
+WITHOUT_RC_COMPAT=1
+. /etc/init.d/functions
+
+LOCKFILE=/var/lock/exilog
+RETVAL=0
+
+start()
+{
+	/usr/sbin/exilog_agent.pl >> /var/log/exilog_agent.log 2 >&1
+}
+
+stop()
+{
+	/bin/kill -s 15 `cat /var/run/exilog/agent.pid`
+}
+
+status()
+{
+	RETVAL=$?
+	return $RETVAL
+}
+
+restart()
+{
+	stop
+	start
+}
+
+# See how we were called.
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	reload|restart)
+		restart
+		;;
+	status)
+		status
+		;;
+	condstop)
+		if [ -e "$LOCKFILE" ]; then
+			stop
+		fi
+		;;
+	condreload|condrestart)
+		if [ -e "$LOCKFILE" ]; then
+			restart
+		fi
+		;;
+	*)
+		msg_usage "${0##*/} {start|stop|reload|restart|status|condstop|condreload|condrestart}"
+		RETVAL=1
+esac
+
+exit $RETVAL

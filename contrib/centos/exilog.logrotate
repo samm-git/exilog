@@ -1,0 +1,12 @@
+# daemon does not need restarting after log rotate
+# so we do not prod it any more
+/var/log/exilog.log 
+/var/log/exilog_agent.log
+{
+  missingok
+  notifempty
+  delaycompress
+  postrotate 
+  	/sbin/service exilog reload  > /dev/null 2>/dev/null || true
+  endscript
+}
