@@ -360,9 +360,9 @@ sub _find_headers {
   my $subdir = shift;
   my $list = shift;
 
-  return unless (opendir(THIS,$base."/".$subdir));
-  my @entries = grep !/^\./, readdir THIS;
-  closedir(THIS);
+  return unless (opendir(DIR,$base."/".$subdir));
+  my @entries = grep !/^\./, readdir DIR;
+  closedir(DIR);
 
   foreach my $entry (@entries) {
     if (-d $base."/".$subdir."/".$entry) {

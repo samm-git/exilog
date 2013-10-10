@@ -76,7 +76,7 @@ sub _parse_delivery {
 
 
   # When +sender_on_delivery is set, cut away the F=<> part
-  $subj =~ s/[PF]\=[^ ]+ //;
+  $subj =~ s/[PF]\=[^ :]+([ :])/$1/;
 
   m/()/;
 
@@ -97,6 +97,16 @@ sub _parse_delivery {
   else {
     $h->{rcpt} = $h->{rcpt_final};
   };
+
+  # Catch TLS DN first because it may contain C= ST= L= patterns (we don't use it)
+  m/()/;
+  $subj =~ s/DN="[^"]*" //;
+  $h->{dn} = $1 if ($1);
+
+  # Catch subject lines
+  m/()/;
+  $subj =~ s/T="[^"]*" //;
+  $h->{subject} = $1 if ($1);
 
   m/()/;
   $subj =~ s/R\=([^ \:]+)//;
