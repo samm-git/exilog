@@ -164,6 +164,16 @@ wildcards when only specifying a substring:
 Example: You want to find all mails with addresses that contain
 'joe', so you'd search for '%joe%'.
 
+## Debian Packages
+
+*deb* packages for exilog can be found on `https://apt.netshadow.net`.
+
+| Package-Name | Description |
+| - | - |
+| exilog-agent | exilog agent itself |
+| exilog-cgi | contains the CGI stuff for the WebUI |
+| exilog-common | shared stuff used by CGIs and agents |
+
 ## Credits
 
 * Tom Kistner <tom@duncanthrax.net> June 2005
