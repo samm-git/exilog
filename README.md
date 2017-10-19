@@ -6,6 +6,8 @@
 | Version | 0.5.1 |
 | License | GPLv2 |
 
+[TOC]
+
 ## Introduction
 
 Exilog is a tool to centralize and visualize Exim logs
