@@ -10,7 +10,7 @@
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur f�r Tabelle `deferrals`
+# Tabellenstruktur für Tabelle `deferrals`
 #
 
 CREATE TABLE `deferrals` (
@@ -38,7 +38,7 @@ CREATE TABLE `deferrals` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur f�r Tabelle `deliveries`
+# Tabellenstruktur für Tabelle `deliveries`
 #
 
 CREATE TABLE `deliveries` (
@@ -66,7 +66,7 @@ CREATE TABLE `deliveries` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur f�r Tabelle `errors`
+# Tabellenstruktur für Tabelle `errors`
 #
 
 CREATE TABLE `errors` (
@@ -94,7 +94,7 @@ CREATE TABLE `errors` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur f�r Tabelle `messages`
+# Tabellenstruktur für Tabelle `messages`
 #
 
 CREATE TABLE `messages` (
@@ -127,7 +127,7 @@ CREATE TABLE `messages` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur f�r Tabelle `queue`
+# Tabellenstruktur für Tabelle `queue`
 #
 
 CREATE TABLE `queue` (
@@ -157,7 +157,7 @@ CREATE TABLE `queue` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur f�r Tabelle `rejects`
+# Tabellenstruktur für Tabelle `rejects`
 #
 
 CREATE TABLE `rejects` (
@@ -183,7 +183,7 @@ CREATE TABLE `rejects` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur f�r Tabelle `unknown`
+# Tabellenstruktur für Tabelle `unknown`
 #
 
 CREATE TABLE `unknown` (
