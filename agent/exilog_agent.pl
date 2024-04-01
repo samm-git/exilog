@@ -414,13 +414,13 @@ sub _tail {
       print STDERR "($$) [exilog_agent:_tail] ($logfile) ".scalar localtime()." ".$_[0];
     };
 
-  # open the file
-  open(LOGFILE,"< $logfile");
-
   # import parser, open DB connection
   use exilog_parse;
   use exilog_sql;
   reconnect();
+
+  # open the file
+  open(LOGFILE,"< $logfile");
 
   my $curpos = 0;
   my $fsize = (-s $logfile);
