@@ -1,3 +1,5 @@
+0.6.0
+     - Support new exim_message_id format
 0.5.1
      - IPv6 address parsing
      - Some queue management

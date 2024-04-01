@@ -263,9 +263,9 @@ sub _titlebar_html {
         $q->Tr(
           $q->td({-class=>"message_wide"},
             _item( { 'text' => $h->{server} },
-                   ( (edv($h,'message_id') && ($h->{message_id} =~ /^.{6}\-.{6}-.{2}$/) ) ?
+                   ( (edv($h,'message_id') && ($h->{message_id} =~ /^.{6}\-.{6,11}-.{2,4}$/) ) ?
                                             { 'text' => '&middot;' } : undef ),
-                   ( (edv($h,'message_id') && ($h->{message_id} =~ /^.{6}\-.{6}-.{2}$/) ) ?
+                   ( (edv($h,'message_id') && ($h->{message_id} =~ /^.{6}\-.{6,11}-.{2,4}$/) ) ?
                                             { 'link' => { 'tab' => 'messages',
                                                           'tr' => '0',
                                                           'qt' => 'message_id',

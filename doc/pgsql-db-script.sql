@@ -29,7 +29,7 @@ SET default_with_oids = false;
 
 CREATE TABLE deferrals (
     server character varying(32) NOT NULL,
-    message_id character(16) NOT NULL,
+    message_id character(23) NOT NULL,
     "timestamp" bigint NOT NULL,
     rcpt character varying(200) NOT NULL,
     rcpt_intermediate character varying(200),
@@ -52,7 +52,7 @@ ALTER TABLE exilog.deferrals OWNER TO exilog;
 
 CREATE TABLE deliveries (
     server character varying(32) NOT NULL,
-    message_id character(16) NOT NULL,
+    message_id character(23) NOT NULL,
     "timestamp" bigint NOT NULL,
     rcpt character varying(200) NOT NULL,
     rcpt_intermediate character varying(200),
@@ -74,7 +74,7 @@ ALTER TABLE exilog.deliveries OWNER TO exilog;
 
 CREATE TABLE errors (
     server character varying(32) NOT NULL,
-    message_id character(16) NOT NULL,
+    message_id character(23) NOT NULL,
     "timestamp" bigint NOT NULL,
     rcpt character varying(200) NOT NULL,
     rcpt_intermediate character varying(200),
@@ -109,7 +109,7 @@ ALTER TABLE exilog.heartbeats OWNER TO exilog;
 
 CREATE TABLE messages (
     server character varying(32) NOT NULL,
-    message_id character(16) NOT NULL,
+    message_id character(23) NOT NULL,
     "timestamp" bigint,
     msgid character varying(255),
     completed bigint,
@@ -134,7 +134,7 @@ ALTER TABLE exilog.messages OWNER TO exilog;
 
 CREATE TABLE queue (
     server character varying(32) NOT NULL,
-    message_id character(16) NOT NULL,
+    message_id character(23) NOT NULL,
     mailfrom character varying(255),
     "timestamp" bigint,
     num_dsn integer,
@@ -157,7 +157,7 @@ ALTER TABLE exilog.queue OWNER TO exilog;
 
 CREATE TABLE rejects (
     server character varying(32) NOT NULL,
-    message_id character(16),
+    message_id character(23),
     "timestamp" bigint NOT NULL,
     host_addr inet,
     host_rdns character varying(255),
@@ -177,7 +177,7 @@ ALTER TABLE exilog.rejects OWNER TO exilog;
 
 CREATE TABLE unknown (
     server character varying(32) NOT NULL,
-    message_id character(16) NOT NULL,
+    message_id character(23) NOT NULL,
     "timestamp" bigint NOT NULL,
     line character varying(255) NOT NULL
 );

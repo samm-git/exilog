@@ -353,7 +353,7 @@ sub messages {
     delete $message->{timestamp};
 
     # Check the message ID.
-    if ($message->{message_id} !~ /^.{6}\-.{6}\-.{2}$/) {
+    if ($message->{message_id} !~ /^.{6}\-.{6,11}\-.{2,4}$/) {
       # This is a pre-DATA reject/warning.
       # Render it as a reject.
       my $complete = @{ sql_select( 'rejects', ['*'], $message ) }[0];

@@ -10,12 +10,12 @@
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur für Tabelle `deferrals`
+# Tabellenstruktur fï¿½r Tabelle `deferrals`
 #
 
 CREATE TABLE `deferrals` (
   `server` varchar(32) NOT NULL default '',
-  `message_id` varchar(16) binary NOT NULL default '',
+  `message_id` varchar(23) binary NOT NULL default '',
   `timestamp` bigint(20) NOT NULL default '0',
   `rcpt` varchar(200) NOT NULL default '',
   `rcpt_intermediate` varchar(200) default NULL,
@@ -38,12 +38,12 @@ CREATE TABLE `deferrals` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur für Tabelle `deliveries`
+# Tabellenstruktur fï¿½r Tabelle `deliveries`
 #
 
 CREATE TABLE `deliveries` (
   `server` varchar(32) NOT NULL default '',
-  `message_id` varchar(16) binary NOT NULL default '',
+  `message_id` varchar(23) binary NOT NULL default '',
   `timestamp` bigint(20) NOT NULL default '0',
   `rcpt` varchar(200) NOT NULL default '',
   `rcpt_intermediate` varchar(200) default NULL,
@@ -66,12 +66,12 @@ CREATE TABLE `deliveries` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur für Tabelle `errors`
+# Tabellenstruktur fï¿½r Tabelle `errors`
 #
 
 CREATE TABLE `errors` (
   `server` varchar(32) NOT NULL default '',
-  `message_id` varchar(16) binary NOT NULL default '',
+  `message_id` varchar(23) binary NOT NULL default '',
   `timestamp` bigint(20) NOT NULL default '0',
   `rcpt` varchar(200) NOT NULL default '',
   `rcpt_intermediate` varchar(200) default NULL,
@@ -94,12 +94,12 @@ CREATE TABLE `errors` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur für Tabelle `messages`
+# Tabellenstruktur fï¿½r Tabelle `messages`
 #
 
 CREATE TABLE `messages` (
   `server` varchar(32) NOT NULL default '',
-  `message_id` varchar(16) binary NOT NULL default '',
+  `message_id` varchar(23) binary NOT NULL default '',
   `timestamp` bigint(20) default NULL,
   `msgid` varchar(255) default NULL,
   `completed` bigint(20) default NULL,
@@ -127,12 +127,12 @@ CREATE TABLE `messages` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur für Tabelle `queue`
+# Tabellenstruktur fï¿½r Tabelle `queue`
 #
 
 CREATE TABLE `queue` (
   `server` varchar(32) NOT NULL default '',
-  `message_id` varchar(16) binary NOT NULL default '',
+  `message_id` varchar(23) binary NOT NULL default '',
   `mailfrom` varchar(255) NOT NULL default '',
   `timestamp` bigint(20) NOT NULL default '0',
   `num_dsn` int(11) NOT NULL default '0',
@@ -157,12 +157,12 @@ CREATE TABLE `queue` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur für Tabelle `rejects`
+# Tabellenstruktur fï¿½r Tabelle `rejects`
 #
 
 CREATE TABLE `rejects` (
   `server` varchar(32) NOT NULL default '',
-  `message_id` varchar(16) binary default NULL,
+  `message_id` varchar(23) binary default NULL,
   `timestamp` bigint(20) NOT NULL default '0',
   `host_addr` varchar(39) NOT NULL default '',
   `host_rdns` varchar(255) NOT NULL default '',
@@ -183,12 +183,12 @@ CREATE TABLE `rejects` (
 # --------------------------------------------------------
 
 #
-# Tabellenstruktur für Tabelle `unknown`
+# Tabellenstruktur fï¿½r Tabelle `unknown`
 #
 
 CREATE TABLE `unknown` (
   `server` varchar(32) NOT NULL default '',
-  `message_id` varchar(16) binary NOT NULL default '',
+  `message_id` varchar(23) binary NOT NULL default '',
   `timestamp` bigint(20) NOT NULL default '0',
   `line` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`server`,`message_id`,`timestamp`,`line`),
